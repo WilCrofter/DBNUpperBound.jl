@@ -1,3 +1,20 @@
+# emacs
+*#*
+*~*
+*~#
+*/*#*
+*/*~*
+
+# julia
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
+*.juliahistory
+
+# notes
+notes/*
+
+# checkpoints
+src/.ipynb_checkpoints/*
+
+
