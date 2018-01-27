@@ -1,5 +1,4 @@
-using DBN_Upper_Bound
+using DBNUpperBound
 using Base.Test
 
-# write your own tests here
-@test 1 == 2
+include("test_utility.jl")
