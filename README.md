@@ -4,6 +4,14 @@ An attempt to provide Julia code in support of Terence Tao's [recently proposed 
 
 The main point of Julia in this case is, of course, performance.
 
+To install this package and its dependencies:
+```
+julia> Pkg.clone("https://github.com/WilCrofter/DBNUpperBound.jl.git")
+```
+
 TODO:
 
-Implement [Tao's warmup exercise](https://terrytao.wordpress.com/2018/01/24/polymath-proposal-upper-bounding-the-de-bruijn-newman-constant/#comment-491795), beginning with porting [KM's utility function, `phi_decay`](https://github.com/km-git-acc/dbn_upper_bound/blob/master/utility.py#L11)
+Fix performance problems in Ht apparently due to quadrature over semi-infinite interval in which the integrand is essentially zero.  
+
+Implement [Tao's warmup exercise](https://terrytao.wordpress.com/2018/01/24/polymath-proposal-upper-bounding-the-de-bruijn-newman-constant/#comment-491795).
+
