@@ -1,6 +1,6 @@
 module DBNUpperBound
 
-export phi_decay, Φ
+export phi_decay, Φ, Ht
 
 include("utility.jl")
 include("Ht.jl")
