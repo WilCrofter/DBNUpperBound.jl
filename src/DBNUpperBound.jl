@@ -1,7 +1,9 @@
 module DBNUpperBound
 
-export phi_decay, Φ
-export Ht
+using QuadGK
+using SpecialFunctions
+
+export phi_decay, Φ, Ht
 
 include("utility.jl")
 include("Ht.jl")
