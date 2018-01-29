@@ -22,7 +22,7 @@ end
 
 """ Ht(t, z; n_max=100, PI=π)
     
-    Returns an approximate value of Ht(z), the integral from 0 to ∞ of Φ(u)*exp(t*u^2)*cos(uz), where the first two factors are approximated by truncated series of n_max (default 100) terms. (See http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant).
+    Returns a 2-tuple of an approximate value of Ht(z) and an estimated error of approximation. Ht(z) is the integral from 0 to ∞ of Φ(u)*exp(t*u^2)*cos(uz), where the first two factors are approximated by truncated series of n_max (default 100) terms. (See http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant).
     """
 function Ht{T1<:Real,T2<:Number}(t::T1, z::T2; n_max::Int=100, upper_limit::T1=10.0, abstol=eps(T1), maxevals=10^7,
                                  PI=convert(promote_type(T1,typeof(real(z)),typeof(imag(z)),Float64),π))
