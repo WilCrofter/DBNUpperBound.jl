@@ -16,13 +16,12 @@ julia> Pkg.update("DBNUpperBound")
 
 STATUS:
 
-`phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests.
+`phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. There's an expository Jupyter notebook in the /notebooks subdirectory.
 
 TODO:
 
-Implement [Tao's warmup exercise](https://terrytao.wordpress.com/2018/01/24/polymath-proposal-upper-bounding-the-de-bruijn-newman-constant/#comment-491795).
-
-Generalize `Φ` to take complex arguments with restricted imaginary parts.
+* Generalize `Φ` to take complex arguments with restricted imaginary parts.
+* Implement $H_0$ in terms of ξ and ζ and compare with `Ht(0.0, ⋅)`.
 
 In Julia 0.6, `Base.runtests()` seems to have bugs. Looking into this. Meanwhile, the following alternative may serve:
 

@@ -15,6 +15,6 @@
 notes/*
 
 # checkpoints
-src/.ipynb_checkpoints/*
+notebooks/.ipynb_checkpoints/*
 
 
