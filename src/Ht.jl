@@ -28,3 +28,32 @@ function Ht{T1<:Real,T2<:Number}(t::T1, z::T2; n_max::Int=100, upper_limit::T1=1
                                  PI=convert(promote_type(T1,typeof(real(z)),typeof(imag(z)),Float64),π))
     return quadgk((u)-> Ht_integrand(t,u,z; n_max=n_max, PI=PI), 0.0, upper_limit, abstol=abstol, maxevals=maxevals)
 end
+
+""" ζ(z)
+
+    Alias for SpecialFunctions implementation, `zeta`, of Riemann's ζ function.
+    """
+ζ = zeta
+
+""" Γ(z)
+
+    Alias for SpecialFunctions implemention, `gamma` of the gamma function.
+    """
+Γ = gamma
+
+""" ξ(s)
+
+    Implementation of the Riemann xi function, ξ, using Riemann's zeta, ζ, and the gamma function, Γ, as implemented in Julia's SpecialFunctions package.
+    """
+function ξ{T<:Number}(s::T; PI=convert(promote_type(typeof(real(s)), typeof(imag(s), Float64)),π))
+    return (s/2)*(s-1)*PI^(s/2)*Γ(s/2)*ζ(s)
+end
+
+""" H0(z)
+
+    Implementation of H0(z) as (1/8)*ξ(1/2+z*im/2). See http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant#.5Bmath.5Dt.3D0.5B.2Fmath.5D. Compare with Ht(0.0,z).
+    """
+function H0{T<:Number}(z::T; PI=convert(promote_type(typeof(real(z)), typeof(imag(z), Float64)),π))
+    return  ξ((1+z*im)/2)/8
+end
+    
