@@ -14,14 +14,21 @@ To remain current:
 julia> Pkg.update("DBNUpperBound")
 ```
 
-STATUS:
+### STATUS:
 
 `phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. There's an expository Jupyter notebook in the /notebooks subdirectory.
 
-TODO:
+Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
+
+Implemented c, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex arguments to ξ, xi, Ξ, Xi are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
+
+### TODO:
 
 * Generalize `Φ` to take complex arguments with restricted imaginary parts.
-* Implement $H_0$ in terms of ξ and ζ and compare with `Ht(0.0, ⋅)`.
+* Unit tests for ξ, Ξ, and for H0 against Ht(0.0, ⋅).
+* Remove PI as an optional variable if possible. It seems unnecessary at this point and creates a lot of type cruft.
+
+### Issues:
 
 In Julia 0.6, `Base.runtests()` seems to have bugs. Looking into this. Meanwhile, the following alternative may serve:
 
