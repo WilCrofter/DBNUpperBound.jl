@@ -31,29 +31,69 @@ end
 
 """ ζ(z)
 
-    Alias for SpecialFunctions implementation, `zeta`, of Riemann's ζ function.
+    Alias for SpecialFunctions implementation, `zeta`, of Riemann's ζ function. Note: zeta allows BigFloat and BigInt arguments, but not Complex{BigFloat} or Complex{BigInt}.
     """
 ζ = zeta
 
 """ Γ(z)
 
-    Alias for SpecialFunctions implemention, `gamma` of the gamma function.
+    Alias for SpecialFunctions implemention, `gamma` of the gamma function.  Note: gamma allows BigFloat and BigInt arguments, but not Complex{BigFloat} or Complex{BigInt}.
     """
 Γ = gamma
 
+
+""" NotBigReal
+
+    A convenient type for trapping certain arguments. SpecialFunctions `gamma` and `zeta` can take real, but not complex, BigFloats.
+    """
+const NotBigReal = Union{Signed, Rational, Float64, Float32, Float16}
+
+""" NotBigComplex
+
+    A convenient type for trapping certain arguments. SpecialFunctions `gamma` and `zeta` can take real, but not complex, BigFloats.
+    """
+const NotBigComplex = Complex{T} where T <: NotBigReal
+
 """ ξ(s)
 
-    Implementation of the Riemann xi function, ξ, using Riemann's zeta, ζ, and the gamma function, Γ, as implemented in Julia's SpecialFunctions package.
+    Implementation of the Riemann xi function, ξ, using Riemann's zeta, ζ, and the gamma function, Γ, as implemented in Julia's SpecialFunctions package. Because zeta and gamma can take real, but not complex, multiprecision arguments, the same restrictions apply to ξ.
     """
-function ξ{T<:Number}(s::T; PI=convert(promote_type(typeof(real(s)), typeof(imag(s), Float64)),π))
-    return (s/2)*(s-1)*PI^(s/2)*Γ(s/2)*ζ(s)
+function ξ{T<:Union{NotBigComplex, Real}}(s::T)
+    epsilon = eps(promote_type(typeof(real(s)),typeof(imag(s)),Float64))
+    if abs(s-1.0) ≤ epsilon
+        return (s/2)*π^(-s/2)*Γ(s/2) # (s-1)*ζ(s)→1 as s→1
+    elseif abs(s) ≤ epsilon
+        return π^(-s/2)*(s-1)*ζ(s) # s/2*Γ(s/2)→1 as s→0
+    else
+        return π^(-s/2)*(s/2)*Γ(s/2)*(s-1)*ζ(s)
+    end
 end
 
+""" xi(s)
+
+    Alias for Riemann's xi function, ξ(s). Note: because of restrictions in Julia's SpecialFunctions package, xi can take real, but not complex, multiprecision arguments.
+    """
+xi =  ξ
+
+""" Ξ(z)
+    
+    Implementation of the Riemann-Landau Xi function, Ξ, as ξ(1/2 + z*i).  Note: because of restrictions in Julia's SpecialFunctions package, Ξ can take real, but not complex, multiprecision arguments.
+     """
+function Ξ{T<:Union{NotBigComplex, Real}}(z::T)
+    return  ξ(1/2 + z*im)
+end
+
+""" Xi(z)
+
+    Alias for the Riemann-Landau Xi function, Ξ(z). Note: because of restrictions in Julia's SpecialFunctions package, Xi can take real, but not complex, multiprecision arguments.
+    """
+Xi = Ξ
+    
 """ H0(z)
 
-    Implementation of H0(z) as (1/8)*ξ(1/2+z*im/2). See http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant#.5Bmath.5Dt.3D0.5B.2Fmath.5D. Compare with Ht(0.0,z).
+    Implementation of H0(z) as (1/8)*ξ(1/2+z*im/2). See https://en.wikipedia.org/wiki/Riemann_Xi_function. Compare with Ht(0.0,z). Note: because of restrictions in Julia's SpecialFunctions package, H0 cannot take multiprecision arguments.
     """
-function H0{T<:Number}(z::T; PI=convert(promote_type(typeof(real(z)), typeof(imag(z), Float64)),π))
+function H0{T<:Union{NotBigReal,NotBigComplex}}(z::T)
     return  ξ((1+z*im)/2)/8
 end
     
