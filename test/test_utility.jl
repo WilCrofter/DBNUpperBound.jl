@@ -21,14 +21,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> 
 =#
 
-# KM's 20 digit approximation to π. Using this
-# for testing against the python 2.7 code.
-PIKM=DBNUpperBound.KM_PI
-@test phi_decay(0.001,PI=PIKM) ≈ 0.446680170237
-@test phi_decay(0.01,PI=PIKM) ≈ 0.445026555345
-@test phi_decay(0.1,PI=PIKM) ≈ 0.304274852667
-@test phi_decay(0.5,PI=PIKM) ≈ 1.37781394064e-07
-@test phi_decay(1,PI=PIKM) ≈ 5.10200133902e-70
+@test phi_decay(0.001) ≈ 0.446680170237
+@test phi_decay(0.01) ≈ 0.445026555345
+@test phi_decay(0.1) ≈ 0.304274852667
+@test phi_decay(0.5) ≈ 1.37781394064e-07
+@test phi_decay(1) ≈ 5.10200133902e-70
 
 
 
