@@ -26,7 +26,7 @@ Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex a
 
 * Generalize `Φ` to take complex arguments with restricted imaginary parts.
 * Unit tests for ξ, Ξ, and for H0 against Ht(0.0, ⋅).
-* Remove PI as an optional variable if possible. It seems unnecessary at this point and creates a lot of type cruft.
+* Expand docs to include optional parameters.
 
 ### Issues:
 
