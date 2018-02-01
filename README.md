@@ -20,7 +20,7 @@ julia> Pkg.update("DBNUpperBound")
 
 Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
 
-Implemented c, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex arguments to ξ, xi, Ξ, Xi are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
+Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex arguments to ξ, xi, Ξ, Xi are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
 
 ### TODO:
 
