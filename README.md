@@ -16,7 +16,7 @@ julia> Pkg.update("DBNUpperBound")
 
 ### STATUS:
 
-`phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. There's an expository Jupyter notebook in the /notebooks subdirectory.
+`phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. `Φ` allows complex arguments with imaginary parts less than π/8 in absolute value. There's an expository Jupyter notebook in the /notebooks subdirectory.
 
 Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
 
@@ -24,7 +24,6 @@ Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex a
 
 ### TODO:
 
-* Generalize `Φ` to take complex arguments with restricted imaginary parts.
 * Unit tests for ξ, Ξ, and for H0 against Ht(0.0, ⋅).
 * Expand docs to include optional parameters.
 
