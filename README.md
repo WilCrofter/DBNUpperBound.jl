@@ -25,6 +25,7 @@ Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex a
 ### TODO:
 
 * Unit tests for ξ, Ξ, and for H0 against Ht(0.0, ⋅).
+* Implement K_tθ and I_tθ, -π/8 < θ < π/8, as described [in first thread](https://terrytao.wordpress.com/2018/01/27/polymath15-first-thread-computing-h_t-asymptotics-and-dynamics-of-zeroes/).
 * Expand docs to include optional parameters.
 
 ### Issues:

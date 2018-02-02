@@ -29,4 +29,19 @@ begin # to localize variable scope
 
     @test all([f(a[i], tmp[idx[i],:]) for i in 1:length(idx)])
 
+    # Random complex numbers with real and imaginary parts at most 1 in absolute value.
+    local zs = 2*(rand(10)+im*rand(10)) - (1+im)
+
+    # Test that ξ and Ξ satisfy known functional relations 
+    @test all([ξ(z) ≈ ξ(1-z) for z in zs])
+    @test all([Ξ(z) ≈ Ξ(-z) for z in zs])
+
+    # Test that Ht(0.0,z) and H0(z) are within tolerance
+    local function g(z)
+        ht = Ht(0.0,z)
+        h0 = H0(z)
+        return abs(ht[1]-h0) < ht[2]
+    end
+    @test all([g(z) for z in zs])
+
 end
