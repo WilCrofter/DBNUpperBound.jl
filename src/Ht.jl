@@ -1,6 +1,6 @@
 """ Ht_term(t, u, n)
 
-    Returns the value of the nth term of the infinite series, Φ(u)*exp(t*u^2). (See http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant). This is written separately from the corresponding term of Φ(u) itself to avoid numerical problems with large positive and negative exponents.
+    Returns the value of the nth term of the infinite series, Φ(u)*exp(t*u^2), where Φ(u) is  defined as on the PolyMath 15 page http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant. This is written separately from the corresponding term (Φpm(u)) of Φ(u) itself to avoid numerical problems with large positive and negative exponents.
     """
 function Ht_term{T1<:Real, T2<:Real}(t::T1, u::T2, n::Int)
     x = t*u^2-π*n^2*exp(4*u)
@@ -9,7 +9,7 @@ end
 
 """ Ht_integrand(t, u, z; nmax=100)
     
-    Returns a partial summation of the infinite series, Φ(u)*exp(t*u^2), to n_max (default 100) terms.
+    Returns a partial summation of the infinite series, Φ(u)*exp(t*u^2), to n_max (default 100) terms, where Φ(u) is  defined as on the PolyMath 15 page http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant.
     """
 function Ht_integrand{T1<:Real, T2<:Real, T3<:Number}(t::T1, u::T2, z::T3; n_max=100)
     ans = convert(promote_type(Complex{T1},Complex{T2},T3),0)

@@ -59,14 +59,21 @@ function ϕ(x; n_max=100)
     return ans
 end
 
-function Ξλ_integrand(λ,u,z;n_max=100)
-    2*exp(λ*u^2+log(ΦKKL(u,n_max=n_max)))*cos(u*z)
+function Ξ_integrand(λ,u,z;n_max=100)
+    lusq = λ*u^2
+    phi = Φ(u,n_max=n_max)
+    if -Inf < lusq < Inf && phi ≈ 0.0
+        return 0.0
+    else
+        return exp(lusq)*phi*cos(u*z)
+    end
 end
 
-function Ξλ(λ,z;n_max=100, upper_limit = 10.0)
-    return quadgk((u)-> Ξλ_integrand(λ,u,z;n_max=n_max), 0.0, upper_limit, abstol=eps(λ), maxevals=10^7)
+function Ξ(λ,z;n_max=100, upper_limit = 10.0)
+    ans, err = quadgk((u)-> Ξ_integrand(λ,u,z;n_max=n_max), 0.0, upper_limit, abstol=eps(λ), maxevals=10^7)
+    return ans/2, err
 end
 
-function ΦKKL(u;n_max=100)
-    return 2*ϕ(exp(2*u),n_max=n_max)
+function Φ(u;n_max=100)
+    return ϕ(exp(2*u),n_max=n_max)
 end
