@@ -16,16 +16,19 @@ julia> Pkg.update("DBNUpperBound")
 
 ### STATUS:
 
-`phi_decay`, `Φ` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. `Φ` allows complex arguments with imaginary parts less than π/8 in absolute value. There's an expository Jupyter notebook in the /notebooks subdirectory.
+`phi_decay`, `Φpm` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. `Φpm` allows complex arguments with imaginary parts less than π/8 in absolute value. There's an expository Jupyter notebook in the /notebooks subdirectory.
 
 Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
 
 Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex arguments to ξ, xi, Ξ, Xi are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
 
+Implemented ψ, ϕ, Φ, Ξ<sub>λ</sub> as described in [KKL2009](https://www.sciencedirect.com/science/article/pii/S0001870809001133).  
+
 ### TODO:
 
 * Implement K_tθ and I_tθ, -π/8 < θ < π/8, as described [in first thread](https://terrytao.wordpress.com/2018/01/27/polymath15-first-thread-computing-h_t-asymptotics-and-dynamics-of-zeroes/).
 * Expand docs to include optional parameters.
+* Document ψ, ϕ, Φ, Ξ<sub>λ</sub>.
 
 ### Issues:
 
