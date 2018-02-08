@@ -20,6 +20,11 @@ function test_KKL()
     # Verify that ϕ(big(x)) ≈ ϕ(1/big(x)) (multiprecision)
     @test all([isapprox(ϕ(big(u)),ϕ(1/big(u)),atol=1e-14) for u in x])
 
+    # Verify that two implementations of ϕ are approximately equal unless
+    # their difference is less than 1e-14, which seems the best we can
+    # do with Float64. Multiprecision does slightly better but not much.
+    @test all([isapprox(ϕ(u),DBNUpperBound.ϕ4test(u),atol=1e-14) for u in x])
+
     
 end
 

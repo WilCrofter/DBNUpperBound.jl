@@ -12,17 +12,21 @@ end
 function ψx(x; n_max=100)
     ans = 0.0
     for n in 1:n_max
-        ans += -exp(-n^2*π*x+2*log(n)+log(π))
+        ans += -n^2*exp(-n^2*π*x)
     end
-    return(ans)
+    return(ans*π)
 end
 
 function ψxx(x; n_max=100)
     ans = 0.0
     for n in 1:n_max
-        ans += exp(-n^2*π*x+4*log(n)+2*log(π))
+        ans += n^4*exp(-n^2*π*x)
     end
-    return(ans)
+    return(ans*π^2)
+end
+
+function ϕ4test(x; n_max=100)
+    return x^(5/4)*(2*x*ψxx(x; n_max=n_max) + 3*ψx(x; n_max=n_max))
 end
 
 function ϕ(x; n_max=100)
