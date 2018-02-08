@@ -1,6 +1,6 @@
 # ϕ ψ π Φ
 
-function ψ(x::T; n_max=100) where T<:Number
+function ψ(x::T; n_max=100) where {T<:Number}
     real(x) > 0 || error("For convergence, x must have positive real part")
     ans = 0.0
     for n in 1:n_max
@@ -10,7 +10,7 @@ function ψ(x::T; n_max=100) where T<:Number
 end
 
 
-function ψx(x::T; n_max=100) where T<:Number
+function ψx(x::T; n_max=100) where {T<:Number}
     real(x) > 0 || error("For convergence, x must have positive real part")
     ans = 0.0
     for n in 1:n_max
@@ -19,7 +19,7 @@ function ψx(x::T; n_max=100) where T<:Number
     return(ans*π)
 end
 
-function ψxx(x::T; n_max=100) where T<:Number
+function ψxx(x::T; n_max=100) where {T<:Number}
     real(x) > 0 || error("For convergence, x must have positive real part")
     ans = 0.0
     for n in 1:n_max
@@ -28,11 +28,11 @@ function ψxx(x::T; n_max=100) where T<:Number
     return(ans*π^2)
 end
 
-function ϕ4test(x::T; n_max=100) where T<:Number
+function ϕ4test(x::T; n_max=100) where {T<:Number}
     return x^(5/4)*(2*x*ψxx(x; n_max=n_max) + 3*ψx(x; n_max=n_max))
 end
 
-function ϕ(x::T; n_max=100) where T<:Number
+function ϕ(x::T; n_max=100) where {T<:Number}
     real(x) > 0 || error("For convergence, x must have positive real part")
     a=b=d=0.0
     for n in 1:n_max
@@ -50,11 +50,11 @@ function ϕ(x::T; n_max=100) where T<:Number
     return ans
 end
 
-function Φ(u::T;n_max=100) where T<:Number
+function Φ(u::T;n_max=100) where {T<:Number}
     return 2*ϕ(exp(2*u),n_max=n_max)
 end
 
-function Ξ_integrand(λ::T1,u::T2,z::T3;n_max=100) where T1<:Real where T2<:Number where T3<:Number
+function Ξ_integrand(λ::T1,u::T2,z::T3;n_max=100) where {T1<:Real, T2<:Number, T3<:Number}
     lusq = λ*u^2
     phi = Φ(u,n_max=n_max)
     if -Inf < real(lusq) < Inf && phi ≈ 0.0
@@ -64,7 +64,7 @@ function Ξ_integrand(λ::T1,u::T2,z::T3;n_max=100) where T1<:Real where T2<:Num
     end
 end
 
-function Ξ(λ::T1,z::T2;n_max=100, upper_limit = 10.0) where T1<:Real where T2<:Number
+function Ξ(λ::T1,z::T2;n_max=100, upper_limit = 10.0) where {T1<:Real, T2<:Number}
     ans, err = quadgk((u)-> Ξ_integrand(λ,u,z;n_max=n_max), 0.0, upper_limit, abstol=eps(λ), maxevals=10^7)
     return ans/2, err
 end
