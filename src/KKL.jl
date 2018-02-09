@@ -50,13 +50,13 @@ function ϕ(x::T; n_max=100) where {T<:Number}
     return ans
 end
 
-function Φ(u::T;n_max=100) where {T<:Number}
+function ΦKKL(u::T;n_max=100) where {T<:Number}
     return 2*ϕ(exp(2*u),n_max=n_max)
 end
 
 function Ξ_integrand(λ::T1,u::T2,z::T3;n_max=100) where {T1<:Real, T2<:Number, T3<:Number}
     lusq = λ*u^2
-    phi = Φ(u,n_max=n_max)
+    phi = ΦKKL(u,n_max=n_max)
     if -Inf < real(lusq) < Inf && phi ≈ 0.0
         return 0.0
     else

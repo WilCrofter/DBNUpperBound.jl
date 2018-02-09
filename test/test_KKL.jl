@@ -32,7 +32,7 @@ function test_KKL()
     # where  Ξ(t) is the Riemann-Landau Xi.
     @test all([Ξ(0.0,t)[1] ≈ ξ(1/2+im*t)/4 for t in x])
     # Equivalently
-    @test all([Ξ(0.0,t)[1] ≈ Ξ(t)/4 for t in x])
+    @test all([Ξ(0.0,t)[1] ≈ ΞRL(t)/4 for t in x])
 
     # Assuming Ξ(0.0,t) = ξ(1/2 + t*im)/4 where Ξ(0.0,t) is as defined in KKL2009
     # and noting that, as Ht(0.0,t) is defined at PM15, Ht(0.0,t)= H0(t) =ξ((1+t*im)/2)/8,
@@ -40,6 +40,11 @@ function test_KKL()
     # have Ht(0.0,t)=H0(t)=1/2*Ξ(0.0,t/2). We know from test_Ht.jl that
     # the first equality holds within numerical tolerance. Checking the second equality:
     @test all([H0(t)≈1/2*Ξ(0.0,t/2)[1] for t in x])
+
+    # Using Ht(0.0,t)=1/2*Ξ(0.0,t/2), change of variable, and Fourier inversion
+    # we can deduce that Φpm(t)≈1/2*ΦKKL(2*t), where Φpm is Φ as defined in PM15,
+    # and ΦKKL as defined in KKL2009
+    all([Φpm(t)≈1/2*ΦKKL(2*t) for t in x])
 end
 
 test_KKL()

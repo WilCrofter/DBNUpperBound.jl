@@ -73,11 +73,11 @@ end
     """
 xi =  ξ
 
-""" Ξ(z)
+""" ΞRL(z)
     
-    Implementation of the Riemann-Landau Xi function, Ξ, as ξ(1/2 + z*i).  Note: because of restrictions in Julia's SpecialFunctions package, Ξ can take real, but not complex, multiprecision arguments.
+    Implementation of the Riemann-Landau Xi function, Ξ, as ξ(1/2 + z*i).  Note: because of restrictions in Julia's SpecialFunctions package, ΞRL can take real, but not complex, multiprecision arguments.
      """
-function Ξ(z::T) where {T<:Union{NotBigComplex, Real}}
+function ΞRL(z::T) where {T<:Union{NotBigComplex, Real}}
     return  ξ(1/2 + z*im)
 end
 
@@ -85,7 +85,7 @@ end
 
     Alias for the Riemann-Landau Xi function, Ξ(z). Note: because of restrictions in Julia's SpecialFunctions package, Xi can take real, but not complex, multiprecision arguments.
     """
-Xi = Ξ
+XiRL = ΞRL
     
 """ H0(z)
 
