@@ -32,7 +32,7 @@ Implemented ψ, ϕ, Φ, Ξ<sub>λ</sub> as described in [KKL2009](https://www.sc
 
 ### Issues:
 
-`Φ(z)` as computed is not an even function within numerical tolerance. Looking into it.
+`Φpm(z)` as computed is not an even function within numerical tolerance. Looking into it.
 
 In Julia 0.6, `Base.runtests()` seems to have bugs. Looking into this. Meanwhile, the following alternative may serve:
 

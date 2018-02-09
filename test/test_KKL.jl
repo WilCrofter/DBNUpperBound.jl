@@ -25,7 +25,11 @@ function test_KKL()
     # do with Float64. As above, multiprecision does slightly better but not much.
     @test all([isapprox(ϕ(u),DBNUpperBound.ϕ4test(u),atol=1e-14) for u in x])
 
-    
+    # KKL2009 claims that Ξ(0.0,t) = ξ(1/2 + t*im), but as those functions
+    # are implemented here, following KKL2009 for implementation of Ξ(0.0,t)
+    # and the using a standard definition of Riemann's xi, for implementation
+    # of ξ, the actual relation seems to be Ξ(0.0,t) = ξ(1/2 + t*im)/4
+    @test all([Ξ(0.0,t)[1] ≈ ξ(1/2+im*t)/4 for t in x])
 end
 
 test_KKL()
