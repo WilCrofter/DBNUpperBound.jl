@@ -20,15 +20,17 @@ julia> Pkg.update("DBNUpperBound")
 
 Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
 
-Implemented ξ, its alias xi, Ξ, its alias Xi, and H0. Multiprecision complex arguments to ξ, xi, Ξ, Xi are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
+Implemented ξ, its alias xi, Riemann & Landau's Ξ, ΞRL, its alias XiRL, and H0. Multiprecision complex arguments to ξ, xi, ΞRL, XiRL are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
 
 Implemented ψ, ϕ, Φ, Ξ<sub>λ</sub> as described in [KKL2009](https://www.sciencedirect.com/science/article/pii/S0001870809001133).  
+
+Tested approximate equalities Ht(0,t)≈1/2*Ξ(0.0,t/2) and Φpm(t)≈1/2*ΦKKL(2*t) which can be deduced from definitions.
 
 ### TODO:
 
 * Implement K_tθ and I_tθ, -π/8 < θ < π/8, as described [in first thread](https://terrytao.wordpress.com/2018/01/27/polymath15-first-thread-computing-h_t-asymptotics-and-dynamics-of-zeroes/).
 * Expand docs to include optional parameters.
-* Document ψ, ϕ, Φ, Ξ<sub>λ</sub>.
+* Document ψ, ϕ, ΦKKL, Ξ(λ,z).
 
 ### Issues:
 
