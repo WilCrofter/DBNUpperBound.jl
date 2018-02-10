@@ -11,5 +11,6 @@ export ψ, ϕ, ΦKKL, Ξ
 include("utility.jl")
 include("Ht.jl")
 include("KKL.jl")
+include("special_fcts.jl")
 
 end # module
