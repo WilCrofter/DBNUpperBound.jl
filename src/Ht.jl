@@ -27,66 +27,6 @@ function Ht(t::T1, z::T2; n_max::Int=100, upper_limit::T1=10.0, abstol=eps(T1), 
     return quadgk((u)-> Ht_integrand(t,u,z; n_max=n_max), 0.0, upper_limit, abstol=abstol, maxevals=maxevals)
 end
 
-""" ζ(z)
-
-    Alias for SpecialFunctions implementation, `zeta`, of Riemann's ζ function. Note: zeta allows BigFloat and BigInt arguments, but not Complex{BigFloat} or Complex{BigInt}.
-    """
-ζ = zeta
-
-""" Γ(z)
-
-    Alias for SpecialFunctions implemention, `gamma` of the gamma function.  Note: gamma allows BigFloat and BigInt arguments, but not Complex{BigFloat} or Complex{BigInt}.
-    """
-Γ = gamma
-
-
-""" NotBigReal
-
-    A convenient type for trapping certain arguments. SpecialFunctions `gamma` and `zeta` can take real, but not complex, BigFloats.
-    """
-const NotBigReal = Union{Signed, Rational, Float64, Float32, Float16}
-
-""" NotBigComplex
-
-    A convenient type for trapping certain arguments. SpecialFunctions `gamma` and `zeta` can take real, but not complex, BigFloats.
-    """
-const NotBigComplex = Complex{T} where {T <: NotBigReal}
-
-""" ξ(s)
-
-    Implementation of the Riemann xi function, ξ, using Riemann's zeta, ζ, and the gamma function, Γ, as implemented in Julia's SpecialFunctions package. Because zeta and gamma can take real, but not complex, multiprecision arguments, the same restrictions apply to ξ.
-    """
-function ξ(s::T) where {T<:Union{NotBigComplex, Real}}
-    epsilon = eps(promote_type(typeof(real(s)),typeof(imag(s)),Float64))
-    if abs(s-1.0) ≤ epsilon
-        return (s/2)*π^(-s/2)*Γ(s/2) # (s-1)*ζ(s)→1 as s→1
-    elseif abs(s) ≤ epsilon
-        return π^(-s/2)*(s-1)*ζ(s) # s/2*Γ(s/2)→1 as s→0
-    else
-        return π^(-s/2)*(s/2)*Γ(s/2)*(s-1)*ζ(s)
-    end
-end
-
-""" xi(s)
-
-    Alias for Riemann's xi function, ξ(s). Note: because of restrictions in Julia's SpecialFunctions package, xi can take real, but not complex, multiprecision arguments.
-    """
-xi =  ξ
-
-""" ΞRL(z)
-    
-    Implementation of the Riemann-Landau Xi function, Ξ, as ξ(1/2 + z*i).  Note: because of restrictions in Julia's SpecialFunctions package, ΞRL can take real, but not complex, multiprecision arguments.
-     """
-function ΞRL(z::T) where {T<:Union{NotBigComplex, Real}}
-    return  ξ(1/2 + z*im)
-end
-
-""" Xi(z)
-
-    Alias for the Riemann-Landau Xi function, Ξ(z). Note: because of restrictions in Julia's SpecialFunctions package, Xi can take real, but not complex, multiprecision arguments.
-    """
-XiRL = ΞRL
-    
 """ H0(z)
 
     Implementation of H0(z) as (1/8)*ξ(1/2+z*im/2). See https://en.wikipedia.org/wiki/Riemann_Xi_function. Compare with Ht(0.0,z). Note: because of restrictions in Julia's SpecialFunctions package, H0 cannot take multiprecision arguments.
