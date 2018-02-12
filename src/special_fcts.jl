@@ -81,7 +81,7 @@ function ΞRL(z::T) where {T<:Union{NotBigComplex, Real}}
     return  ξ(1/2 + z*im)
 end
 
-""" Xi(z)
+""" XiRL(z)
 
     Alias for the Riemann-Landau Xi function, Ξ(z). Note: because of restrictions in Julia's SpecialFunctions package, Xi can take real, but not complex, multiprecision arguments.
     """

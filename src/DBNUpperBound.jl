@@ -8,9 +8,9 @@ using SpecialFunctions
 # utility.jl and Ht.jl
 export phi_decay, Φpm, Ht, ζ, zeta, Γ, gamma, ξ, xi, XiRL, ΞRL,H0
 # KKL.jl
-export ψ, ϕ, ΦKKL, Ξ
+export ψKKL, ϕKKL, ΦKKL, ΞKKL
 
-include("special_fcts.jl")
+include("special_fcts.jl") # load first for type definitions used elsewhere
 include("utility.jl")
 include("Ht.jl")
 include("KKL.jl")
