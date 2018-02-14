@@ -1,17 +1,4 @@
-""" NotBigReals
 
-    A convenient type for trapping certain arguments. SpecialFunctions `gamma` and `zeta` can take real, but not complex, BigFloats.
-    """
-const NotBigInt = Union{Int64,Int32,Int16,Int8}
-const NotBigFloat = Union{Float64, Float32, Float16}
-const NotBigRational = Rational{T} where {T<:NotBigInt}
-const NotBigReal = Union{NotBigInt, NotBigFloat, NotBigRational}
-
-""" NotBigComplex
-
-    A convenient type for trapping certain arguments. SpecialFunctions `lgamma`, `gamma` and `zeta` can take real, but not complex, BigFloats.
-    """
-const NotBigComplex = Complex{T} where {T <: NotBigReal}
 
 """ log_threshold
     A constant indicating when `lgamma` rather than `gamma` should be used in computation.
@@ -27,24 +14,6 @@ function logΓ(z::T) where T<:NotBigComplex
     return abs(z) > log_threshold ? lgamma(z) : log(gamma(z))
 end
 
-""" Γ(z)
-    
-    Augmentation of SpecialFunctions implementation, `gamma`, of the Gamma function. Will use `gamma` or `lgamma` depending on |z|, and return a multiprecision result if necessary.
-    """
-function Γ(z::T) where T<:NotBigComplex
-    if abs(z) > log_threshold
-        tmp = logΓ(z)
-        exptmp = exp(tmp)
-        if isfinite(exptmp)
-            return exptmp
-        else
-            g = big(real(tmp))+big(imag(tmp))*im
-            return exp(g)
-        end
-    else
-        return gamma(z)
-    end
-end
 
 """ ζ(z)
 
@@ -59,11 +28,11 @@ end
 function ξ(s::T) where {T<:Union{NotBigComplex, Real}}
     epsilon = eps(promote_type(typeof(real(s)),typeof(imag(s)),Float64))
     if abs(s-1.0) ≤ epsilon
-        return (s/2)*π^(-s/2)*Γ(s/2) # (s-1)*ζ(s)→1 as s→1
+        return (s/2)*π^(-s/2)*bigΓ(s/2) # (s-1)*ζ(s)→1 as s→1
     elseif abs(s) ≤ epsilon
         return π^(-s/2)*(s-1)*ζ(s) # s/2*Γ(s/2)→1 as s→0
     else
-        return π^(-s/2)*(s/2)*Γ(s/2)*(s-1)*ζ(s)
+        return π^(-s/2)*(s/2)*bigΓ(s/2)*(s-1)*ζ(s)
     end
 end
 
