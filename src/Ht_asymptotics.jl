@@ -1,27 +1,26 @@
-""" BigNum
 
-    Return type for asymptotic functions.
-    """
-const BigNum = Union{BigFloat, Complex{BigFloat}}
-
-function bigify(s::T)::BigNum where {T<:Number}
-    return imag(s)==0 ? big(s) : big(real(s))+im*big(imag(s))
+function bigify(s::T) where {T<:Number}
+    return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
 end
 
-# assume t=0.4, y>=0.4, and x>=0.0
+# Notation:
+# Ht's argument is denoted z=x+iy where x,y are real.
+# Arguments to A, B, and C include s=(1+iz)/2
+# The case of interest is t=y=0.4, and x>>0.0.
+# Specifically, x > 2e+5 is of interest.
 
 function bigexp(s::T) where {T<:Number}
-    ans = exp(s)
-    return isfinite(ans) ? ans : exp(bigify(s))
+    ans = exp(real(s))
+    return exp(im*imag(s))*(isfinite(ans) && !(ans == 0) ? ans : exp(bigify(real(s))))
 end
 
 function bigcos(s::T) where {T<:Number}
-    x,y = real(s),imag(s)
-    if y < 0.0
-        x=-x
-        y=-y
+    u,v = real(s),imag(s)
+    if v < 0.0
+        u=-u
+        v=-v
     end
-    return bigexp(y)*((1+exp(-2*y))*cos(x) + im*(1-exp(-2*y))sin(x))
+    return bigexp(v)*((1+bigexp(-2*v))*cos(u) + im*(1-bigexp(-2*v))*sin(u))
 end
 
 function bigΓ(s::T) where {T<:NotBigComplex}
