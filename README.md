@@ -26,9 +26,12 @@ Implemented ψ, ϕ, Φ, Ξ<sub>λ</sub> as described in [KKL2009](https://www.sc
 
 Tested approximate equalities Ht(0,t)≈1/2*Ξ(0.0,t/2) and Φpm(t)≈1/2*ΦKKL(2*t) which can be deduced from definitions.
 
+Implemented asymptotic approximations [A, B, C](https://terrytao.wordpress.com/2018/02/12/polymath15-third-thread-computing-and-approximating-h_t/) as in Thread 3, and tested for expected behavior for x between 10<sup>5</sup> and 10<sup>15</sup>.
+
 ### TODO:
 
-* Implement K_tθ and I_tθ, -π/8 < θ < π/8, as described [in first thread](https://terrytao.wordpress.com/2018/01/27/polymath15-first-thread-computing-h_t-asymptotics-and-dynamics-of-zeroes/).
+* Check Ht as implemented against asymptotic approximations based on A, B, C.
+* Implement logA, logB, logC in attempt to increase range?
 * Expand docs to include optional parameters.
 * Document ψ, ϕ, ΦKKL, Ξ(λ,z).
 
