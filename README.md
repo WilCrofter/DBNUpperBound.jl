@@ -37,7 +37,27 @@ Implemented asymptotic approximations [A, B, C](https://terrytao.wordpress.com/2
 
 ### Issues:
 
+
+As implemented here, asymptotic approximations, A+B-C, disagree with Ht by orders of magnitude for large values of the real part of z. In some sense this is not surprising since for large real(z) Ht's reported quadrature error is larger than its estimate of the integral, but it's suspicious enough to warrant study. Ht, as implemented here, does agree with its Python counterpart for smaller values of real(z). (See `test/test_Ht.jl`.) Example:
+```
+julia> D.Ht(0.4,1e3+.4im)
+(-1.1686937089741209e-18 + 2.5500530718937875e-20im, 2.2322557270968237e-16)
+
+julia> z = 1e3 + .4im
+1000.0 + 0.4im
+
+julia> s=(1+im*z)/2
+0.3 + 500.0im
+
+julia> M=N=floor(Int,sqrt(imag(s)/(2*π)))
+8
+
+julia> A(0.4,N,s)+B(.4,M,s)-C(.4,N,M,s)
+4.345878346665737394544694943915155845207144437164468917444559157180353968548644e-167 + 2.820807643087679411425141633331924224210463568073841825703857716030970761075199e-167im
+```
+
 `Φpm(z)` as computed is not an even function within numerical tolerance. Looking into it.
+
 
 In Julia 0.6, `Base.runtests()` seems to have bugs. Looking into this. Meanwhile, the following alternative may serve:
 
