@@ -37,7 +37,7 @@ function test_asymptotics()
     tol=[1,5,6,8,12,16]
     for i in eachindex(abc[2:end])
         a,b,c = abc[i]
-        @test round(abs((a+b)/(a+b+c)),tol[i])==1
+        @test round(abs((a+b)/(a+b-c)),tol[i])==1
     end
 
 end
