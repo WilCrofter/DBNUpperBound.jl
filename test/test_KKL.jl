@@ -1,4 +1,5 @@
 using DBNUpperBound
+using DBNUpperBound.KKL
 using QuadGK
 using SpecialFunctions
 using Base.Test

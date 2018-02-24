@@ -1,4 +1,6 @@
-# ϕ ψ π Φ
+module KKL
+
+export ψKKL, ϕKKL, ΦKKL, ψKKL, ΞKKL, ϕKKL4test
 
 function ψKKL(x::T; n_max=100) where {T<:Number}
     real(x) > 0 || error("For convergence, x must have positive real part")
@@ -69,3 +71,4 @@ function ΞKKL(λ::T1,z::T2;n_max=100, upper_limit = 10.0) where {T1<:Real, T2<:
     return ans/2, err
 end
 
+end

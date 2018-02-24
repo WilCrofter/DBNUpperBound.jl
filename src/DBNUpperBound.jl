@@ -17,6 +17,11 @@ include("special_fcts.jl")
 include("Ht_asymptotics.jl")
 include("utility.jl")
 include("Ht.jl")
-include("KKL.jl")
+
+# Submodules
+include("KKL/KKL.jl")
+using .KKL
+include("numerics/Numerics.jl")
+using .Numerics
 
 end # module
