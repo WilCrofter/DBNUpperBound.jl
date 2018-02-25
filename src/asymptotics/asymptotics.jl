@@ -1,7 +1,9 @@
 module Asymptotics
 
-export A,B,C,bigexp,bigcos,bigΓ,Ψpm
+export A,B,C,Nz,Ns,bigexp,bigcos,bigΓ,Ψpm
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
+
+include("ABprime.jl")
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
@@ -58,5 +60,14 @@ function B(t::T1,M::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
     end
     return (1/8)*s*Γfactor*bigexp(-log(π)*s/2)*psum
 end
+
+function Nz(z)
+    return floor(Int, sqrt(real(z)/(4*π)))
+end
+
+function Ns(s)
+    return floor(Int, sqrt(imag(s)/(2*π)))
+end
+
 
 end

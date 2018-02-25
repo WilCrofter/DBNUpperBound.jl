@@ -10,7 +10,7 @@ export phi_decay, Φpm, Ht, ζ, zeta, Γ, gamma, ξ, xi, XiRL, ΞRL,H0
 # KKL.jl
 export ψKKL, ϕKKL, ΦKKL, ΞKKL
 # Ht_asymptotics.jl
-# export A, B, C
+export A, B, C
 
 include("types.jl")
 include("special_fcts.jl") 
