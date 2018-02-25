@@ -1,4 +1,6 @@
+
 using DBNUpperBound
+using DBNUpperBound.Asymptotics
 using QuadGK
 using SpecialFunctions
 using Base.Test

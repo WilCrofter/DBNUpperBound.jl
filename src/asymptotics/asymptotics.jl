@@ -1,3 +1,7 @@
+module Asymptotics
+
+export A,B,C
+import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
@@ -55,3 +59,4 @@ function B(t::T1,M::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
     return (1/8)*s*Γfactor*bigexp(-log(π)*s/2)*psum
 end
 
+end
