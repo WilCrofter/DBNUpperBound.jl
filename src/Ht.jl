@@ -7,6 +7,25 @@ function Ht_term(t::T1, u::T2, n::Int) where {T1<:Real, T2<:Real}
     return (2*π^2*n^4*exp(9*u+x)-3*π*n^2*exp(5*u+x))
 end
 
+"""
+    If n is real, it is rounded down to the nearest integer.
+    """
+function Ht_term(t::T1, u::T2, v::Float64) where {T1<:Real, T2<:Real}
+    Ht_term(t,u,floor(Int,v))
+end
+
+"""
+    Sum Ht terms to nmax and estimate the tail and tail error by quadrature. Tail and tail errors are generally VERY small.
+    """
+function Ht_sum(t, u; nmax=10)
+    s = 0.0
+    for n in 1:nmax
+        s += Ht_term(t, u, n)
+    end
+    tail, err = quadgk((v::Float64)->Ht_term(t,u,v),nmax+1.5,Inf,abstol=eps(Float64))
+    s+tail, err
+end
+
 """ Ht_integrand(t, u, z; nmax=100)
     
     Returns a partial summation of the infinite series, Φ(u)*exp(t*u^2), to n_max (default 100) terms, where Φ(u) is  defined as on the PolyMath 15 page http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant.
