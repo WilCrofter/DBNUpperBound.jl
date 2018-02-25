@@ -1,6 +1,6 @@
 module Asymptotics
 
-export A,B,C
+export A,B,C,bigexp,bigcos,bigΓ,Ψpm
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 function bigify(s::T) where {T<:Number}
