@@ -4,6 +4,7 @@ export A,B,C,Nz,Ns,bigexp,bigcos,bigΓ,Ψpm
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 include("ABprime.jl")
+include("fordebug.jl")
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
@@ -56,10 +57,12 @@ function B(t::T1,M::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
     Γfactor =  (s-1)/2 ≈ 0 ? -1.0 : ((s-1)/2)*bigΓ((1-s)/2)
     psum = 0
     for m in 1:M
-        psum += bigexp( (t/16)*log((5-s)/(π*m^2))^2 -(1-s)*log(m) )
+        psum += bigexp( (t/16)*log((5-s)/(2*π*m^2))^2 )/m^(1-s)
     end
-    return (1/8)*s*Γfactor*bigexp(-log(π)*s/2)*psum
+    return (1/8)*s*Γfactor*bigexp(log(π)*(s-1)/2)*psum
 end
+
+
 
 function Nz(z)
     return floor(Int, sqrt(real(z)/(4*π)))
