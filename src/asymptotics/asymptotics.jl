@@ -59,8 +59,6 @@ function B(t::T1,M::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
     return (1/8)*s*Γfactor*bigexp(log(π)*(s-1)/2)*psum
 end
 
-
-
 function Nz(z)
     return floor(Int, sqrt(real(z)/(4*π)))
 end

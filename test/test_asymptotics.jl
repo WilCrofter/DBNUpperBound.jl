@@ -35,6 +35,16 @@ function test_asymptotics()
         end
     end
 
+    #= Branch or mod 2π problem?
+    for u in s
+        α = u/(2*π*im*Ns(s))-Ns(s)
+        # \Psi(\alpha) = 2\pi i - e^{-2\pi i \alpha} \Psi(\alpha+1)
+        @test Ψpm(α) ≈ 2*π*im - exp(-2*π*im*α)*Ψpm(α+1)
+        # \Psi(\alpha+1)-\Psi(\alpha) = \frac{2\pi}{\sqrt{i}} \exp(i \pi \alpha^2)
+        @test Ψpm(α+1)-Ψpm(α) ≈ (2*π/sqrt(im))*exp(im*π*α^2)
+    end
+    =#
 end
 
 test_asymptotics()
+
