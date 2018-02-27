@@ -35,13 +35,10 @@ function test_asymptotics()
         end
     end
 
-    # Test that C is asymptotically small compared with A and B
-    tol=[1,5,6,8,12,16]
-    for i in eachindex(abc[2:end])
-        a,b,c = abc[i]
-        @test round(abs((a+b)/(a+b-c)),tol[i])==1
-    end
+    # Test that Ψpm satisfies appropriate functional equations
 
+    α = [u/(2*π*Ns(u)) - Ns(u) for u in s]
+    
 end
 
 test_asymptotics()

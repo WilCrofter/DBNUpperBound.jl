@@ -33,8 +33,11 @@ function bigΓ(s::T) where {T<:NotBigComplex}
     return bigexp(logΓ(s))
 end
 
+"""
+    https://terrytao.wordpress.com/2018/02/02/polymath15-second-thread-generalising-the-riemann-siegel-approximate-functional-equation/#comment-492182
+"""
 function Ψpm(α::T) where {T<:Number}
-    return 2*π*bigexp(im*(π/2)*α^2-5*π/8)*bigcos(π*(α^2/2-α-π/8))/bigcos(π*α)
+    return 2*π*bigexp(im*(π/2)*(α^2-5/4))*bigcos(π*(α^2/2-α-1/8))/bigcos(π*α)
 end
 
 function C(t::T1,N::I1,M::I2,s::T2) where {T1<:Number, I1<:Integer, I2<:Integer, T2<:NotBigComplex}
