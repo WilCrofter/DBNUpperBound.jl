@@ -21,12 +21,7 @@ function bigexp(s::T) where {T<:Number}
 end
 
 function bigcos(s::T) where {T<:Number}
-    u,v = real(s),imag(s)
-    if v < 0.0
-        u=-u
-        v=-v
-    end
-    return bigexp(v)*((1+bigexp(-2*v))*cos(u) + im*(1-bigexp(-2*v))*sin(u))
+    return (bigexp(-im*s)+bigexp(im*s))/2
 end
 
 function bigΓ(s::T) where {T<:NotBigComplex}

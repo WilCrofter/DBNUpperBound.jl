@@ -35,10 +35,6 @@ function test_asymptotics()
         end
     end
 
-    # Test that Ψpm satisfies appropriate functional equations
-
-    α = [u/(2*π*Ns(u)) - Ns(u) for u in s]
-    
 end
 
 test_asymptotics()
