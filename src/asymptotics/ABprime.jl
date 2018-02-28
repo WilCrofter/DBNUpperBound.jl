@@ -1,33 +1,20 @@
-# http://michaelnielsen.org/polymath1/index.php?title=Polymath15_test_problem
 
-function utilA1(s::T) where {T <: Number}
-    return (2/8)*sqrt(2*π)*bigexp(-(s/2)*log(π) + ((s+4/2)-1/2)*log((s+4)/2)-(s+4)/2)
+
+function Aprime_a(t::T1, s::T2, n::Int) where {T1<:Real, T2<:Number}
+    return bigexp((t/16)*log((s+4)/(2*π*n^2))^2 - s*log(n))
 end
 
-function utilB1(s::T) where {T <: Number}
-    return utilA1(1-s)
+function Aprime_μ(t::T1, s::T2) where {T1<:Real, T2<:Number}
+    return (2/8)*π^(-s/2)*√(2*π)*bigexp(((s+4)/2 - 1/2)*log((s+4)/2)-(s+4)/2)
 end
 
-function utilA2(s::T1, t::T2, n::Int) where {T1 <: Number, T2 <: Real}
-    return bigexp(-s*log(n) + (t/16)*log((s+4)/(2*π*n^2))^2)
-end
-
-function utilB2(s::T1, t::T2, n::Int) where {T1 <:Number, T2 <: Real}
-    return utilA2(1-s, t, n)
-end
-
-function Aprime(t::T1,N::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
-    psum = 0
-    for n in N:-1:1
-        psum += utilA2(s,t,n)
+function Aprime(t::T1, s::T2, N::Int) where {T1<:Real, T2<:Number}
+    asum = 0.0
+    for n = 1:N
+        asum += Aprime_a(t,s,n)
     end
-    return utilA1(s)*psum
+    return Aprime_μ(t,s)*asum
 end
 
-function Bprime(t::T1,M::I1,s::NBC) where {T1<:Number,I1<:Integer,NBC<:NotBigComplex}
-    psum = 0
-    for m in M:-1:1
-        psum += utilB2(s,t,m)
-    end
-    return utilB1(s)*psum
-end
+Bprime(t,s,N) = Aprime(t,1-s,N) # (This is legal function definition syntax in Julia)
+B0prime(t,s) = Bprime(t,s,1)
