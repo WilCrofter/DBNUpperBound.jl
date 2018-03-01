@@ -1,4 +1,4 @@
-
+# See notebooks/ABeff.ipynb for detailed documentation of this code.
 
 function Aprime_a(t::T1, s::T2, n::Int) where {T1<:Real, T2<:Number}
     return bigexp((t/16)*log((s+4)/(2*π*n^2))^2 - s*log(n))
@@ -16,5 +16,5 @@ function Aprime(t::T1, s::T2, N::Int) where {T1<:Real, T2<:Number}
     return Aprime_μ(t,s)*asum
 end
 
-Bprime(t,s,N) = Aprime(t,1-s,N) # (This is legal function definition syntax in Julia)
+Bprime(t,s,N) = Aprime(t,1-s,N)
 B0prime(t,s) = Bprime(t,s,1)
