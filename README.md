@@ -2,8 +2,6 @@
 
 An attempt to provide Julia code in support of Terence Tao's [recently proposed Polymath Problem.](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant) In particular, I'll try to maintain Julia code which roughly parallels [@KM's python repository](https://github.com/km-git-acc/dbn_upper_bound).
 
-The main point of Julia in this case is, of course, performance.
-
 To install this package and its dependencies:
 
 ```
@@ -14,26 +12,21 @@ To remain current:
 julia> Pkg.update("DBNUpperBound")
 ```
 
-### STATUS:
+### NEWS:
 
-`phi_decay`, `Φpm` (an alias for `phi_decay`), and `Ht`, are implemented and are compatible with Python versions according to unit tests. `Φpm` allows complex arguments with imaginary parts less than π/8 in absolute value. There's an expository Jupyter notebook in the /notebooks subdirectory.
+Implemented asymptotic approximations A<sup>eff</sup>, B<sup>eff</sup> as described [in the wiki](http://michaelnielsen.org/polymath1/index.php?title=Polymath15_test_problem) and lightly tested it against corresponding Python code.
 
-Re-exported SpecialFunctions zeta, gamma, and exported respective aliases, ζ, and Γ. As implemented by the SpecialFunctions package, multiprecision complex arguments are disallowed. Multiprecision reals are OK.
+Implemented asymptotic approximations A', B' as described [in the wiki](http://michaelnielsen.org/polymath1/index.php?title=Polymath15_test_problem) and lightly tested it against corresponding Python code.
 
-Implemented ξ, its alias xi, Riemann & Landau's Ξ, ΞRL, its alias XiRL, and H0. Multiprecision complex arguments to ξ, xi, ΞRL, XiRL are disallowed due to dependence on SpecialFunctions zeta and gamma. Multiprecision arguments to H0 are disallowed.
-
-Implemented ψ, ϕ, Φ, Ξ<sub>λ</sub> as described in [KKL2009](https://www.sciencedirect.com/science/article/pii/S0001870809001133).  
-
-Tested approximate equalities Ht(0,t)≈1/2*Ξ(0.0,t/2) and Φpm(t)≈1/2*ΦKKL(2*t) which can be deduced from definitions.
+Started using [Jupyter notebooks](http://jupyter.org/) when implementing formulae. Notebooks allow juxtaposition of code with mathematical notation copied and pasted (as images or LaTeX) from wiki or blog pages. In my case this seems to result in cleaner and less error-prone implementation.
 
 Implemented asymptotic approximations [A, B, C](https://terrytao.wordpress.com/2018/02/12/polymath15-third-thread-computing-and-approximating-h_t/) as in Thread 3, and tested for expected behavior for x between 10<sup>5</sup> and 10<sup>15</sup>.
 
 ### TODO:
 
-* Check Ht as implemented against asymptotic approximations based on A, B, C.
-* Implement logA, logB, logC in attempt to increase range?
-* Expand docs to include optional parameters.
-* Document ψ, ϕ, ΦKKL, Ξ(λ,z).
+* Implement effective errors for A<sup>eff</sup> and B<sup>eff</sup>.
+* Document and test everything which lacks same.
+* Check Ht as implemented against asymptotic approximations based on A, B, C. More likely: reimplement using notebooks.
 
 ### Issues:
 
