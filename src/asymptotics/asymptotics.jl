@@ -3,10 +3,12 @@ module Asymptotics
 export A,B,C,Nz,Ns,bigexp,bigcos,bigΓ,Ψpm
 export Aprime, Bprime, B0prime
 export Aeff, Beff
+export E1, E2, E3
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 include("ABprime.jl")
 include("ABeff.jl")
+include("EffectiveBounds.jl")
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))

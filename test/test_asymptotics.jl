@@ -44,6 +44,37 @@ function test_asymptotics()
         @test Ψpm(α+1)-Ψpm(α) ≈ (2*π/sqrt(im))*exp(im*π*α^2)
     end
     =#
+
+    # Test B0, B0', B0eff against data published at Polymath15 test problem:
+    # http://michaelnielsen.org/polymath1/index.php?title=Polymath15_test_problem
+    data=((1e3,[(3.4405+3.5443im)*big(1)e-167
+                (3.4204+3.5383im)*big(1)e-167
+                (3.4426+3.5411im)*big(1)e-167
+                (2.3040+2.3606im)*big(1)e-167]),
+          (1e4,[(-1.1843-7.7882im)*big(1)e-1700
+	        (-1.1180-7.7888im)*big(1)e-1700
+	        (-1.1185-7.7879im)*big(1)e-1700
+	        (-1.1155-7.5753im)*big(1)e-1700]),
+          (1e5,[(-7.6133+2.5065im)*big(1)e-17047
+	        (-7.6134+2.5060im)*big(1)e-17047
+	        (-7.6134+2.5059im)*big(1)e-17047
+	        (-7.5483+2.4848im)*big(1)e-17047]),
+          (1e6,[(-3.1615-7.7093im)*big(1)e-170537
+	        (-3.1676-7.7063im)*big(1)e-170537
+	        (-3.1646-7.7079im)*big(1)e-170537
+	        (-3.1590-7.6898im)*big(1)e-170537]),
+          (1e7,[(2.1676-9.6330im)*big(1)e-1705458
+	        (2.1711-9.6236im)*big(1)e-1705458
+	        (2.1571-9.6329im)*big(1)e-1705458
+	        (2.2566-9.6000im)*big(1)e-1705458]))
+    for datum in data
+        x = datum[1]
+        z = x+im*.4
+        s = (1+im*z)/2
+        @test isapprox(B(.4,1,s),datum[2][1],rtol=4)
+        @test isapprox(Bprime(.4,s,1),datum[2][2],rtol=4)
+        @test isapprox(Beff(.4,s,1),datum[2][3],rtol=4)
+    end
 end
 
 test_asymptotics()
