@@ -2,8 +2,8 @@ module Asymptotics
 
 export A,B,C,Nz,Ns,bigexp,bigcos,bigΓ,Ψpm
 export Aprime, Bprime, B0prime
-export Aeff, Beff
-export E1, E2, E3
+export Aeff, Beff, Ceff
+export E1, E2, E3, E3star
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 include("ABprime.jl")

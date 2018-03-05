@@ -75,7 +75,48 @@ function test_asymptotics()
         @test isapprox(Bprime(.4,s,1),datum[2][2],rtol=4)
         @test isapprox(Beff(.4,s,1),datum[2][3],rtol=4)
     end
+
+    test_E_bounds()
+
 end
+
+function test_E_bounds()
+    # Test normalized error estimates E1/B0eff, E2/B0eff, E3star/B0eff
+    # against data posted on test problem page.
+    # http://michaelnielsen.org/polymath1/index.php?title=Polymath15_test_problem
+    data = ((1e3,[.1008
+	          0.2238
+	          0.0014
+	          0.0024]),
+            (1e4,[0.0172
+	          0.0377
+	          0.0001
+	          0.0003]),
+            (1e5,[0.0031
+	          0.0061
+	          0.0000
+	          0.0000]),
+            (1e6,[0.0006
+	          0.0008
+	          0.0000
+	          0.0000]),
+            (1e7,[0.0001
+	          0.0001
+	          0.0000
+	          0.0000]))
+    for datum in data
+        x = datum[1]
+        z = x+im*.4
+        s = (1+im*z)/2
+        N = Ns(s)
+        b0 = abs(Beff(.4,s,1))
+        @test isapprox(abs(Ceff(.4,s))/b0, datum[2][1],rtol=4)
+        @test isapprox(abs(E3star(.4,s))/b0, datum[2][2],rtol=4)
+        @test isapprox(abs(E1(.4,s,N))/b0,datum[2][3],rtol=4)
+        @test isapprox(abs(E2(.4,s,N))/b0,datum[2][4],rtol=4)
+    end
+end
+    
 
 test_asymptotics()
 
