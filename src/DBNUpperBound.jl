@@ -3,7 +3,7 @@ module DBNUpperBound
 using QuadGK
 using SpecialFunctions
 
-
+Γ = SpecialFunctions.gamma
 
 # utility.jl and Ht.jl
 export phi_decay, Φpm, Ht, ζ, zeta, Γ, gamma, ξ, xi, XiRL, ΞRL,H0

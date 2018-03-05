@@ -8,6 +8,7 @@ import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 
 include("ABprime.jl")
 include("ABeff.jl")
+include("Ceff_E3star.jl")
 include("EffectiveBounds.jl")
 
 function bigify(s::T) where {T<:Number}
