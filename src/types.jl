@@ -13,4 +13,4 @@ const NotBigReal = Union{NotBigInt, NotBigFloat, NotBigRational}
 
     A convenient type for trapping certain arguments. SpecialFunctions `lgamma`, `gamma` and `zeta` can take real, but not complex, BigFloats.
     """
-const NotBigComplex = Complex{T} where {T <: NotBigReal}
+const NotBigComplex = Union{Complex{T}, Real } where {T <: NotBigReal}

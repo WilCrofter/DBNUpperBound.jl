@@ -4,11 +4,12 @@ using DBNUpperBound.Asymptotics
 
 # Note that E3⋆ (E3\star<tab>) is a valid variable name in Julia, but might be too easily confused with E3*.
 
-function E3star(t::Ty1, T0::Ty2, s::Ty3) where {Ty1<:Real, Ty2<:Real, Ty3<:Number}
+function E3star(t::Ty1, s::Ty3) where {Ty1<:Real, Ty3<:Number}
+    T0 = imag(s)
     T0 ≥ 100 || error("T0 = ",T0," is too small. T0 ≥ 100 is required for bounds to hold.")
     T0′ = T0 + π*t/8
     a0 = √(T0′/(2*π))
-    return 1/8*√(π)*exp(-t*π^2/64 - π*T0/4 + 0.181/(T0′-3.33))*T0′^(3/2)*(1+5.15/(a0-1.25))
+    return abs(1/8*√(π)*bigexp(-t*π^2/64 - π*T0/4 + 0.181/(T0′-3.33))*T0′^(3/2)*(1+5.15/(a0-1.25)))
 end
 
 function Ceff(t::Ty1, s::Ty2) where {Ty1<:Real, Ty2<:Number}

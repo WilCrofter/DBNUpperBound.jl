@@ -29,7 +29,6 @@ end
 function vσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Real}
     T0prime = T0 + π*t/8
     a0 = √(T0prime/(2*π))
-    σ = real(s)
     if σ ≥ 0
         return 1 + (0.400*9^σ/a0 + 0.346*2^(3σ/2)/a0^2)
     else
@@ -37,7 +36,7 @@ function vσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Re
         for k in 1:1:floor(Int,(4-σ))
             psum += (1.1)^k*bigΓ(k/2)/a0^k
         end
-        return (9/10)^ceiling(Int,-σ)*psum
+        return (9/10)^ceil(Int,-σ)*psum
     end
 end
 
@@ -48,14 +47,14 @@ function wσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Re
     return real((1+σ^2/T0prime^2)^(1/2)*(1 + (1-σ)^2/(T0prime^2))^(1/2)*bigexp(xpo))
 end
 
-function E3(t::Ty1, T::Ty1, T0::Ty1, s::Ty2) where {Ty1 <: Real, Ty2 <: Number}
+function E3(t::Ty1, T::Ty1, T0::Ty1, s::Ty2; limit=100.0) where {Ty1 <: Real, Ty2 <: Number}
     T0 ≥ 10 || error("T0 = ",T0," is out of applicable range.")
-    T ≥ T0 || error("T = ", T, "must be at least ", T0, " (T0).")
+    T ≥ T0 || error("T = ", T, " must be at least ", T0, " (T0).")
     Tprime = imag(s) + π*t/8
     t ≤ 1/2 || error("t must not exceed 1/2. Given value is ",t,".")
     σ = real(s)
-    # sum quadgk's estimate of the integral and the error in its estimate
-    defint = quadgk((σ)->vσ(t,T0,σ)*wσ(t,T0,σ)*fσ(t,σ),-Inf,-10,10,Inf,abstol=eps(BigFloat))
+    # quadgk will balk at limits of integration ≥ 100.
+    defint = quadgk((σ)->vσ(t,T0,σ)*wσ(t,T0,σ)*fσ(t,σ),-limit,limit)
     μ = real(1/8*√(π)bigexp(-t*π^2/64-π*T/4)*Tprime^3/2)
     return μ*real(defint[1]),μ*defint[2]
 end
