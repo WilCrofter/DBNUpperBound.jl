@@ -2,8 +2,10 @@
 using DBNUpperBound
 using DBNUpperBound.Asymptotics
 
-# Note that E3⋆ (E3\star<tab>) is a valid variable name in Julia, but might be too easily confused with E3*.
+""" 
 
+    For documentation, see the Ceff_E3star notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/Ceff_E3star.ipynb.
+    """
 function E3star(t::Ty1, s::Ty3) where {Ty1<:Real, Ty3<:Number}
     T0 = imag(s)
     T0 ≥ 100 || error("T0 = ",T0," is too small. T0 ≥ 100 is required for bounds to hold.")
@@ -12,6 +14,10 @@ function E3star(t::Ty1, s::Ty3) where {Ty1<:Real, Ty3<:Number}
     return abs(1/8*√(π)*bigexp(-t*π^2/64 - π*T0/4 + 0.181/(T0′-3.33))*T0′^(3/2)*(1+5.15/(a0-1.25)))
 end
 
+""" 
+
+    For documentation, see the Ceff_E3star notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/Ceff_E3star.ipynb.
+    """
 function Ceff(t::Ty1, s::Ty2) where {Ty1<:Real, Ty2<:Number}
     T′ = imag(s)+π*t/8
     s′ = s + im*π*t/8

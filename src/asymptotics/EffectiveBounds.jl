@@ -1,4 +1,7 @@
+""" eps_prime(t,s,N)
 
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function eps_prime(t::Ty1, s::Ty2, N::Int) where {Ty1<:Real, Ty2<:Number}
     α1 = αeff(s)
     T = imag(s)
@@ -14,20 +17,36 @@ function eps_prime(t::Ty1, s::Ty2, N::Int) where {Ty1<:Real, Ty2<:Number}
     return real(ans)/2
 end
 
+""" E1(t,s,N)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function E1(t::Ty1, s::Ty2, N::Int) where {Ty1<:Real, Ty2<:Number}
     T = imag(s)
     return real(1/(8*(T-3.33))*bigexp(t/4*real(αeff(s))^2) * abs(H01(s))*eps_prime(t,s,N))
 end
 
+""" E2(t,s,N)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function E2(t::Ty1, s::Ty2, N::Int) where {Ty1<:Real, Ty2<:Number}
     return E1(t,(1-s)',N)
 end
 
+""" eps_prime(t,s,N)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function fσ(t::Ty1, σ::Ty2) where {Ty1<:Real, Ty2<:Real}
     y = 1-σ
     return 1/(2*√(π*t))*(bigexp(-(σ-(1-y)/2)^2/t) + bigexp(-(σ-(1+y)/2)^2)/t)
 end
 
+""" vσ(t,T0,σ)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function vσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Real}
     T0′ = T0 + π*t/8
     a0 = √(T0′/(2*π))
@@ -43,6 +62,10 @@ function vσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Re
     end
 end
 
+""" wσ(t,T0,σ)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function wσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Real}
     T0′ = T0 + π*t/8
     a0 = √(T0′/(2*π))
@@ -50,6 +73,10 @@ function wσ(t::Ty1, T0::Ty2, σ::Ty3) where {Ty1 <: Real, Ty2 <: Real, Ty3 <:Re
     return real((1+σ^2/T0′^2)^(1/2)*(1 + (1-σ)^2/(T0′^2))^(1/2)*bigexp(xpo))
 end
 
+""" E3(t,T0,s)
+
+    For documentation, see the EffectiveBounds notebook https://github.com/WilCrofter/DBNUpperBound.jl/blob/master/notebooks/EffectiveBounds.ipynb.
+    """
 function E3(t::Ty1, T0::Ty1, s::Ty2) where {Ty1 <: Real, Ty2 <: Number}
     T0 ≥ 10 || error("T0 = ",T0," is out of applicable range.")
     T = imag(s)
