@@ -10,6 +10,7 @@ include("ABprime.jl")
 include("ABeff.jl")
 include("Ceff_E3star.jl")
 include("EffectiveBounds.jl")
+include("uniform_bounds.jl")
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
