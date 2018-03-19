@@ -24,7 +24,8 @@ end
 
 function bigexp(s::T) where {T<:Number}
     ans = exp(real(s))
-    return exp(im*imag(s))*(isfinite(ans) && !(ans == 0) ? ans : exp(bigify(real(s))))
+    ans = exp(im*imag(s))*(isfinite(ans) && !(ans == 0) ? ans : exp(bigify(real(s))))
+    return imag(ans) ≈ 0.0 ? real(ans) : ans
 end
 
 function bigcos(s::T) where {T<:Number}
