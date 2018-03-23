@@ -5,12 +5,15 @@ export Aprime, Bprime, B0prime
 export Aeff, Beff, Ceff
 export E1, E2, E3, E3star
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
+export θ_default, Itθ, XisOK, Itθ_tail, minimum_n, series_tail_Itθ9, series_tail_Itθ5, Ht_tail
+export Jtθ, Jtθ_tail, series_tail_Jtθ9, series_tail_Jtθ5, H′t_tail
 
 include("ABprime.jl")
 include("ABeff.jl")
 include("Ceff_E3star.jl")
 include("EffectiveBounds.jl")
 include("uniform_bounds.jl")
+include("I_and_J.jl")
 
 function bigify(s::T) where {T<:Number}
     return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
