@@ -1,6 +1,8 @@
 # de Bruijn Newman Upper Bound
 
-Julia code in support of [Polymath Problem 15](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant) recently proposed by Terence Tao. The official code repositories are [here](https://github.com/km-git-acc/dbn_upper_bound).
+Julia code for [Polymath Problem 15](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant). This repository generally lags the [official repository](https://github.com/km-git-acc/dbn_upper_bound)--my interests are somewhat tangential to the mainstream and analytic number theory is not my field.
+
+The notebook directory above is probably the best indicator of what's going on here.
 
 To install this package and its dependencies:
 
@@ -12,11 +14,6 @@ To remain current:
 julia> Pkg.update("DBNUpperBound")
 ```
 
-### NEWS:
-
-Implemented and tested H<sub>t</sub> approximations except for "toys" which are to be done, and effective errors E1, E2, E3, and E3*. As with H<sub>t</sub>, the default quadrature routine is inadequate for E3.
-
-
 ### TODO:
 
 * Document and test everything which lacks same.
@@ -24,7 +21,7 @@ Implemented and tested H<sub>t</sub> approximations except for "toys" which are 
 ### Issues:
 
 
-In Julia 0.6, `Base.runtests()` seems to have bugs. Looking into this. Meanwhile, the following alternative may serve:
+In Julia 0.6, `Base.runtests()` seems to have bugs. Meanwhile, the following alternative may serve:
 
 ```
 julia> cd(Pkg.dir("DBNUpperBound"))
