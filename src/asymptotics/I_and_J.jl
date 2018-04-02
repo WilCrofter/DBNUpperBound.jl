@@ -6,20 +6,36 @@
 θ_default(y) = π/8 - 1/4*atan((abs(y)+9)/abs(y)) # function definition
 
 
+""" logmag(x,y,t,σ,β,θ,m)
+
+    Returns the log magnitude of Itθ's integrand.
+    """
+function logmag(x,y,t,σ,β,θ,m)
+    return -e^(4*σ)*β*cos(4*θ)+m*σ-t*θ^2+t*σ^2-x*θ-y*σ
+end
+
+""" ω(x,y,t,σ,β,θ,m)
+
+    Returns the angle of Itθ's integrand.
+    """
+function ω(x,y,t,σ,β,θ,m)
+    return -e^(4*σ)*β*sin(4θ)+m*θ+2*t*θ*σ+x*σ-y*θ
+end
+
 """ Itθ(x, y, n, m; t=.4, lower_limit=big(0.0), upper_limit=big(Inf), θ = θ_default(y))
 
     Estimates Itθ by adaptive Gauss-Kronrod quadrature, returning Itθ and an error estimate.
-    
+    NOTE: GK quadrature will fail for oscillatory arguments--larger values of x.
+
     The quadrature function uses multiprecision arithmetic if at least one limit of integration is multiprecision.
 
     If a very unhelpful diagnostic appears, increase precision. It is 256 bits by default. 
     """
 function Itθ(x, y, n, m; t=.4, lower_limit=big(0.0), upper_limit=big(Inf), θ = θ_default(y))
         β = π*n^2
-        b = x - im*(m+y)
-        mag(σ) = exp(-b*θ-β*exp(4*σ)*cos(4*θ)+t*(σ^2-θ^2))
-        ω(σ) = b*σ-β*exp(4*σ)*sin(4*θ)+2*t*θ*σ
-        return quadgk((σ)->mag(σ)*(cos(ω(σ))+im*sin(ω(σ))), lower_limit, upper_limit) # return quadrature, error estimate
+        mag(σ) = exp(logmag(x,y,t,σ,β,θ,m))
+        ω1(σ) = ω(x,y,t,σ,β,θ,m)
+        return quadgk((σ)->mag(σ)*(cos(ω1(σ))+im*sin(ω1(σ))), lower_limit, upper_limit) # return quadrature, error estimate
 end
 
 """ XisOK(X, y, n, m; t=.4, θ=θ_default(y))
@@ -86,7 +102,8 @@ end
 
 """ Jtθ(x, y, n, m; t=.4, lower_limit=big(0.0), upper_limit=big(Inf), θ = θ_default(y))
 
-    Estimates Jtθ by adaptive Gauss-Kronrod quadrature, returning Jtθ and an error estimate.
+    Estimates Jtθ by adaptive Gauss-Kronrod quadrature, returning Jtθ and an error estimate. 
+    NOTE: GK quadrature will fail for oscillatory arguments--larger values of x.
     
     The quadrature function uses multiprecision arithmetic if at least one limit of integration is multiprecision.
 
@@ -94,10 +111,9 @@ end
     """
 function Jtθ(x, y, n, m; t=.4, lower_limit=big(0.0), upper_limit=big(Inf), θ = θ_default(y))
     β = π*n^2
-    b = x - im*(m+y)
-    mag(σ) = exp(-b*θ-β*exp(4*σ)*cos(4*θ)+t*(σ^2-θ^2))
-    ω(σ) = b*σ-β*exp(4*σ)*sin(4*θ)+2*t*θ*σ
-    return quadgk((σ)->mag(σ)*(σ*cos(ω(σ))-θ*sin(ω(σ))+im*(σ*sin(ω(σ))+θ*cos(ω(σ)))), lower_limit, upper_limit) # return quadrature, error estimate
+    mag(σ) = exp(logmag(x,y,t,σ,β,θ,m))
+    ω1(σ) = ω(x,y,t,σ,β,θ,m)
+    return quadgk((σ)->mag(σ)*(σ*cos(ω1(σ))-θ*sin(ω1(σ))+im*(σ*sin(ω1(σ))+θ*cos(ω1(σ)))), lower_limit, upper_limit) # return quadrature, error estimate
 end
 
 """ Jtθ_tail(X, x, y, n, m; t=.4, θ = θ_default(y))
@@ -123,6 +139,7 @@ function series_tail_Jtθ9(x,y; t=.4, θ=θ_default(y), n0=minimum_n(x,y,9,t=t,�
     return (2*π^2*bigexp(-t*θ^2-π*n0^2*cos(4*θ)-θ*x))*(θ/(4*π*n0^2*cos(4*θ)-a) + 1/(4*π*n0^2*cos(4*θ)-a)^2)
 end
 
+
 """ series_tail_Jtθ5(x,y; t=.4, θ=θ_default(y), n0=minimum_n(x,y,5, t=t, θ=θ))
 
     Return a provably correct upper bound on the tail |∑3*π*n^2*Jtθ(x,y,5)| where summation is from n0 to ∞.
@@ -142,3 +159,4 @@ function H′t_tail(x,y; t=.4, θ=θ_default(y), n0=max(minimum_n(x,y,5,t=t,θ=�
     return series_tail_Jtθ9(x,y,t=t,θ=θ,n0=n0)[1]+series_tail_Jtθ5(x,y,t=t,θ=θ,n0=n0)[1] +
                series_tail_Jtθ9(x,-y,t=t,θ=θ,n0=n0)[1]+series_tail_Jtθ5(x,-y,t=t,θ=θ,n0=n0)[1], n0
 end
+
