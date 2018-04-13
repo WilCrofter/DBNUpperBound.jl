@@ -19,7 +19,45 @@ end
     Returns the angle of Itθ's integrand.
     """
 function ω(x,y,t,σ,β,θ,m)
-    return -e^(4*σ)*β*sin(4θ)+m*θ+2*t*θ*σ+x*σ-y*θ
+    return -e^(4*σ)*β*sin(4*θ)+m*θ+2*t*θ*σ+x*σ-y*θ
+end
+
+""" ω_pds(x,t,β,θ,lower_limit, upper_limit; scale=1.0)
+
+    Returns a vector such that ω(x,y,t,σ[i+1],β,θ,m)-ω(x,y,t,σ[i],β,θ,m) ≈ 2π.
+    """
+function ω_pds(x,t,β,θ,lower_limit, upper_limit; scale=1.0)
+    ans = [lower_limit]
+    while ans[end] < upper_limit
+        push!(ans, ans[end]+scale*2*π/abs(2*t*θ+x-4*e^(4*ans[end])*β*sin(4*θ)))
+    end
+    return ans
+end
+
+""" pwquad(f,limits; reltol=sqrt(eps(typeof(limits[1]))), abstol=0, maxevals=10^7, order=7, norm=vecnorm)
+
+    Integrates f by piecewise Gauss-Kronrod quadrature over intervals limits[i] ≤ x ≤ limits[i+1], returning accumulated results and error estimates. 
+    """
+function pwquad(f,limits)
+    val =0.0
+    err =0.0
+    for i in 2:length(limits)
+        tmp = quadgk(f,limits[i-1],limits[i])
+        val += tmp[1]
+        err += tmp[2]
+    end
+    return val, err
+end
+
+""" pwItθ(x, y, n, m, limits; t=.4, θ=θ_default(y)
+
+    Evaluates the integral defining Itθ by piecewise Gauss-Kronrod quadrature over intervals given in limits, returning a value, an error estimate, and a formal bound for the tail.
+    """
+function pwItθ(x,y,n,m,limits; t=.4, θ=θ_default(y))
+    β = π*n^2
+    f(σ) = exp(logmag(x,y,t,σ,β,θ,m))*(cos(ω(x,y,t,σ,β,θ,m))+im*sin(ω(x,y,t,σ,β,θ,m)))
+    val, err = pwquad(f,limits)
+    return val, err, Itθ_tail(limits[end], x, y, n, m; t=t, θ = θ)
 end
 
 """ Itθ(x, y, n, m; t=.4, lower_limit=big(0.0), upper_limit=big(Inf), θ = θ_default(y))
@@ -88,7 +126,7 @@ function series_tail_Itθ5(x,y; t=.4, θ=θ_default(y), n0=minimum_n(x,y,5,t=t,�
     m = 5 # by definition of this series
     a = m+y
     return (3*π*bigexp(-t*θ^2-θ*x-π*n0^2*cos(4*θ)))/(4*π*n0^2*cos(4*θ)-a)*
-           (n0^2/(1-α) + 2*n0*α/(1-α)^2 + (α^2 + α)/(1-α)^3)
+           (n0^2/(1-α) + 2*n0*α/(1-α)^2 + (α^2 + α)/(1-α)^3), n0
 end
 
 """ Ht_tail(x,y; t=.4, θ=θ_default(y), n0=max(minimum_n(x,y,5,t=t,θ=θ), minimum_n(x,y,9,t=t,θ=θ))

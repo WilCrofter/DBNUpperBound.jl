@@ -6,7 +6,8 @@ export Aeff, Beff, Ceff
 export E1, E2, E3, E3star
 import DBNUpperBound.NotBigComplex, DBNUpperBound.logΓ
 export θ_default, Itθ, XisOK, Itθ_tail, minimum_n, series_tail_Itθ9, series_tail_Itθ5, Ht_tail
-export Jtθ, Jtθ_tail, series_tail_Jtθ9, series_tail_Jtθ5, H′t_tail
+export Jtθ, Jtθ_tail, series_tail_Jtθ9, series_tail_Jtθ5, H′t_tail, logmag, ω
+export ω_pds, pwquad, pwItθ
 
 include("ABprime.jl")
 include("ABeff.jl")
