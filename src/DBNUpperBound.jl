@@ -22,5 +22,7 @@ include("KKL/KKL.jl")
 using .KKL
 include("asymptotics/asymptotics.jl")
 using .Asymptotics
+include("pm15a/PM15a.jl")
+using .PM15a
 
 end # module

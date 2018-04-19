@@ -11,7 +11,7 @@
     Returns the log magnitude of Itθ's integrand.
     """
 function logmag(x,y,t,σ,β,θ,m)
-    return -e^(4*σ)*β*cos(4*θ)+m*σ-t*θ^2+t*σ^2-x*θ-y*σ
+    return -bigexp(4*σ)*β*cos(4*θ)+m*σ-t*θ^2+t*σ^2-x*θ-y*σ
 end
 
 """ ω(x,y,t,σ,β,θ,m)
@@ -19,7 +19,7 @@ end
     Returns the angle of Itθ's integrand.
     """
 function ω(x,y,t,σ,β,θ,m)
-    return -e^(4*σ)*β*sin(4*θ)+m*θ+2*t*θ*σ+x*σ-y*θ
+    return -bigexp(4*σ)*β*sin(4*θ)+m*θ+2*t*θ*σ+x*σ-y*θ
 end
 
 """ ω_pds(x,t,β,θ,lower_limit, upper_limit; scale=1.0)
