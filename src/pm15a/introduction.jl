@@ -104,6 +104,33 @@ function bound22(t::Real, x::Real, y::Real)
     return abs(κ(t,x,y)) ≤ t*y/(2*(x-6))
 end
 
+function bound23(t::Real, x::Real, y::Real)
+    bound=0.0
+    N₀ = N(t,x)
+    γ₀ = abs(γ(t,x,y))
+    κ₀ = abs(κ(t,x,y))
+    s₀ = real(s_star(t,x,y))
+    for n in 1:N₀
+        bound += (1+γ₀*N₀^κ₀*n^y)* bᵗₙ(t,n)/n^s₀*
+        (bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+    end
+    return eA(t,x,y)+eB(t,x,y) ≤ bound
+end
+
+function bound23(t::Real, z::Number)
+    return bound23(t,real(z),imag(z))
+end
+
+function bound24(t::Real, x::Real, y::Real)
+    return eC0(t,x,y) ≤ (x/(4*π))^(-(1+y)/4) *
+        bigexp(-t/16*log(x/(4*π))^2 + (1.24*(3^y+3^(-y)))/(N(t,x)-0.125) +
+               (3*abs(log(x/(4*π))+im*π/2)+10.44)/(x-8.52))
+end
+
+function bound24(t::Real, z::Number)
+    return bound24(t,real(z),imag(z))
+end
+
 function ϵ̃(t::Real, σ::Real, T::Real)
     T′ = T - π*t/8
     a = √(T′/(2*π))
@@ -121,3 +148,5 @@ end
 function ϵₜₙ(t::Real, u::Number)
     return ϵₜₙ(t, real(u), imag(u))
 end
+
+

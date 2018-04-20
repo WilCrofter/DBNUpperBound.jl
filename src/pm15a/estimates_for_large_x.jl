@@ -1,5 +1,8 @@
+#= Note that we generally assume s = σ+im*T = (1+im*(x+im*y))/2. Since it is not entirely clear at the the time of this writing, that this is always the case some alternative forms are provided for ambiguous cases.
+=#
+
 function eA(t::Real, x::Real, y::Real)
-    s = :TODO
+    s = (1+im*(x+im*y))/2
     ans = 0.0
     for n in 1:N(t,x)
         ans += n^y*bᵗₙ(t,n)/n^(real(s)+real(κ(t,x,y)))*ϵₜₙ((1-y+im*x)/2)
@@ -12,7 +15,7 @@ function eA(t::Real, z::Number)
 end
 
 function eB(t::Real, x::Real, y::Real)
-    s = :TODO
+    s = (1+im*(x+im*y))/2
     ans = 0.0
     for n in 1:N(t,x)
         ans += bᵗₙ(t,n)/n^real(s)*ϵᵗₙ((1+y+im*x)/2)
@@ -23,9 +26,6 @@ end
 function eB(t::Real, z::Number)
     return eB(t,real(z),imag(z))
 end
-
-#= Note that in many, perhaps all, cases σ+im*T = (1+im*(x+im*y))/2. Since this is not entirely clear at the the time of this writing, they are provisionally regarded as independent in all except two polymorphs of eC and eC0
-=#
 
 function eC(t::Real, x::Real, y::Real, σ::Real, T::Real)
     T′ = T - π*t/8
@@ -44,17 +44,11 @@ function eC(t::Real, z::Number, s::Number)
     return eC(t,real(z),imag(z),real(s),imag(s))
 end
 
-"""
-    CAUTION: this form assumes  σ+im*T = (1+im*(x+im*y))/2
-    """
 function eC(t::Real, x::Real, y::Real)
     s = (1+im*(x+im*y))/2
     return eC(t,x,y,real(s),imag(s))
 end
 
-"""
-    CAUTION: this form assumes  σ+im*T = (1+im*z)/2
-    """
 function eC(t::Real, z::Number)
     s = (1+im*z)/2
     return eC(t,real(z),imag(z),real(s),imag(s))
@@ -69,17 +63,11 @@ function eC0(t::Real, z::Number, T::Real)
     return eC0(t,real(z),imag(z),T)
 end
 
-"""
-    CAUTION: this form assumes  σ+im*T = (1+im*(x+im*y))/2
-    """
 function eC0(t::Real, x::Real, y::Real)
     T = imag((1+im*(x+im*y))/2)
     return eC0(t,x,y,T)
 end
 
-"""
-    CAUTION: this form assumes  σ+im*T = (1+im*z)/2
-    """
 function eC0(t::Real, z::Number)
     T = imag((1+im*z)/2)
     return eC0(t,real(z),imag(z),T)
