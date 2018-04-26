@@ -1,3 +1,19 @@
+""" s⁺(x,y)
+
+    Return (1-y+im*x)/2 = (1+im*(x+im*y))/2. The superscript + refers to the sign of im*(x+im*y), hence the sign of x in the result.
+
+    This relationship between z=x+im*y and s is taken as standard here since it relates H₀ to Riemann's ξ: H₀(z)=ξ((1+im*z)/2)/8. Thus
+    
+    (1-y+im*x)/2 = s⁺(x,y)
+    (1-y-im*x)/2 = s⁺(x,y)'
+    (1+y-im*x)/2 = 1-s⁺(x,y)
+    (1+y+im*x)/2 = 1-s⁺(x,y)' (where ' indicates conjugation.)
+    """
+s⁺(x::Real, y::Real) = (1-y+im*x)/2
+
+s⁺(z::Number) = s⁺(real(z),imag(z))
+
+
 function M₀(s::Number)
     return 1/8*s*(s-1)/2*π^(-s/2)*√(2*π)*bigexp((s-1)/2*log(s/2)-s/2)
 end
@@ -6,34 +22,47 @@ function logM₀(s::Number)
     return log(s) + log(s-1) - s/2*log(π) + log(√(2*π)/16) + (s/2-1/2)*log(s/2)-s/2
 end
 
+"""
+    equation (9), pp 3
+    """
 function logM₀′(s::Number)
     return 1/(2*s) + 1/(s-1) + 1/2*log(s/(2*π))
 end
 
 """ α
 
-    alias for logM₀′
+    alias for logM₀′; equation (9) 
     """
 α = logM₀′
 
 function Mₜ(t::Real, s::Number)
-    return bigexp(t/4*(logM₀′(s))^2)*M₀(s)
+    return bigexp(t/4*(α(s))^2)*M₀(s)
+end
+
+function Mₜ(t::Real, σ::Real, T::Real)
+    return Mₜ(t,σ+im*T)
+end
+
+""" B₀(t,x,y)
+
+    Returns Mₜ(t,(1+y-im*x)/2) = Mₜ(t,1-s⁺(x,y)).
+    """
+function B₀(t::Real, x::Real, y::Real)
+    # Recall that (1+y-im*x)/2 = 1-s⁺(x,y).
+    return Mₜ(t,1-s⁺(x,y))
 end
 
 function B₀(t::Real, z::Number)
-    return Mₜ(t,(1-im*z)/2)
+    return B₀(t,real(z),imag(z))
 end
 
-function B₀(t::Real, x::Real, y::Real)
-    return Mₜ(t,(1+y-im*x)/2)
-end
 
 """ region_5(n)
 
     Return an nx3 array of n points t,x,y in region 5.
     """
-function region_5(n::Integer; Nmax::Integer=2000)
-    return hcat(rand(n)/2, 200+(Nmax-200)*rand(n), rand(n))
+function region_5(n::Integer; xmax::Integer=2000)
+    return hcat(rand(n)/2, 200+(xmax-200)*rand(n), rand(n))
 end
 
 function in_region_5(t::Real, x::Real, y::Real)
@@ -44,31 +73,73 @@ function in_region_5(t::Real, z::Number)
     return in_region_5(t, real(z), imag(z))
 end
 
+"""
+    Equation (14) pp4
+    """
+function fₜ(t::Real, x::Real, y::Real)
+    f1 = f2 = 0.0
+    for n in 1:N(t,x)
+        b = bᵗₙ(t, n)
+        f1 += b/n^(s_star(t,x,y))
+        f2 += n^y*b/n^(s_star(t,x,y)'+κ(t,x,y))
+    end
+    return f1+γₜ(t,x,y)*f2
+end
+
+function fₜ(t::Real, z::Number)
+    return fₜ(t, real(z), imag(z))
+end
+
+"""
+    Equation (15) pp 4.
+    """
 function bᵗₙ(t::Real, n::Int)
     return bigexp(t/4*log(n)^2)
 end
 
-function γ(t::Real, x::Real, y::Real)
-    # Definition in the Apr 19 version of the paper
-    # is Mₜ(t,(1-y+im*x)/2)/Mₜ(t,(1+y-im*x)/2)
-    # which seems to be a typo. See proof of Prop 6.6.
-    return  Mₜ(t,(1-y+im*x)/2)/Mₜ(t,(1+y+im*x)/2)
+"""
+    Returns Mₜ((1-y+im*x)/2)/Mₜ((1+y-ix)/2) = Mₜ(s⁺(x,y))/Mₜ(1-s⁺(x,y))
+    Equation (16) pp 4
+
+    Named γₜ to avoid naming conflict with Euler's constant
+    """
+function γₜ(t::Real, x::Real, y::Real)
+    # Recall that
+    # (1-y+im*x)/2 = s⁺(x,y)
+    # (1+y-im*x)/2 = 1-s⁺(x,y)
+    s = s⁺(x,y)
+    return  Mₜ(t,s)/Mₜ(t,1-s)
 end
 
-function γ(t::Real, z::Number)
-    return γ(t, real(z), imag(z))
+function γₜ(t::Real, z::Number)
+    return γₜ(t, real(z), imag(z))
 end
 
+"""
+    Equation (17) pp 4.
+    """
 function s_star(t::Real, x::Real, y::Real)
-    return (1+y-im*x)/2 + t/2*α((1+y-im*x)/2)
+    # Recall that
+    # (1-y+im*x)/2 = s⁺(x,y)
+    # (1+y-im*x)/2 = 1-s⁺(x,y)
+    s = s⁺(x,y)
+    return 1-s + t/2*α(1-s)
 end
 
 function s_star(t::Real, z::Number)
     return s_star(t, real(z), imag(z))
 end
 
+""" κ(t,x,y)
+
+    Returns t/2*( α((1-y+ix)/2) - α((1+y+ix)/2))
+    """
 function κ(t::Real, x::Real, y::Real)
-    return t/2*(α((1-y+im*x)/2)-α((1+y+ix)/2))
+    # Recall
+    # (1-y+im*x)/2 = s⁺(x,y)
+    # (1+y+im*x)/2 = 1-s⁺(x,y)'
+    s = s⁺(x,y)
+    return t/2*(α(s)-α(1-s'))
 end
 
 function κ(t::Real, z::Number)
@@ -79,40 +150,32 @@ function N(t::Real, x::Real)
     return floor(Int, √(x/(4*π) + t/16))
 end
 
-function fₜ(t::Real, x::Real, y::Real)
-    f1 = f2 = 0.0
-    for n in 1:N(t,x)
-        f1 += bᵗₙ(t, n)
-        f2 += n^y*bᵗₙ(t, n)/n^(s⋆(t,x,y)'+κ(t,x,y))
-    end
-    return f1+γ(t,x,y)*f2
-end
 
-function fₜ(t::Real, z::Number)
-    return fₜ(t, real(z), imag(z))
-end
 
 function bound20(t::Real, x::Real, y::Real)
-    return abs(γ(t,x,y)) ≤ exp(0.02*y)*(x/(4*π))^(-y/2)
+    return abs(γₜ(t,x,y)) ≤ exp(0.02*y)*(x/(4*π))^(-y/2)
 end
 
 function bound21(t::Real,x::Real,y::Real)
-    return real(s_star(t,x,y)) ≥ (1+y)/2 + t/4*log(x/(4*π)) - t*max(0.0, 1-3*y+(4*y*(1+y))/x^2)
+    return real(s_star(t,x,y)) ≥ (1+y)/2 + t/4*log(x/(4*π)) - t*max(0.0, 1-3*y+(4*y*(1+y))/x^2)/(2*x^2)
 end
 
 function bound22(t::Real, x::Real, y::Real)
     return abs(κ(t,x,y)) ≤ t*y/(2*(x-6))
 end
 
+function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
+    return bᵗₙ(t,n)/n^sᵣ*(bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+end
+
 function bound23(t::Real, x::Real, y::Real)
     bound=0.0
     N₀ = N(t,x)
-    γ₀ = abs(γ(t,x,y))
-    κ₀ = abs(κ(t,x,y))
-    s₀ = real(s_star(t,x,y))
+    γₐ = abs(γₜ(t,x,y))
+    κₐ = abs(κ(t,x,y))
+    sᵣ = real(s_star(t,x,y))
     for n in 1:N₀
-        bound += (1+γ₀*N₀^κ₀*n^y)* bᵗₙ(t,n)/n^s₀*
-        (bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+        bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*ebound_util(n,t,x,y,sᵣ=sᵣ)
     end
     return eA(t,x,y)+eB(t,x,y) ≤ bound
 end
@@ -130,23 +193,4 @@ end
 function bound24(t::Real, z::Number)
     return bound24(t,real(z),imag(z))
 end
-
-function ϵ̃(t::Real, σ::Real, T::Real)
-    T′ = T - π*t/8
-    a = √(T′/(2*π))
-    return ((0.397*9^σ)/(a-0.125) + 5/(3*(T′-3.33)))*bigexp(3.49/(T′-3.33))
-end
-
-function ϵ̃(t::Real, u::Number)
-    return ϵ̃(t,real(u),imag(u))
-end
-
-function ϵₜₙ(t::Real, σ::Real, T::Real)
-    return bigexp((t^2/8*abs(α(σ+im*T)-log(n))^2+t/4+1/6)/(T-3.33))-1
-end
-
-function ϵₜₙ(t::Real, u::Number)
-    return ϵₜₙ(t, real(u), imag(u))
-end
-
 
