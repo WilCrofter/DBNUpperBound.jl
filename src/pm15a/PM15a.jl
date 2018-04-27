@@ -7,6 +7,7 @@ using SpecialFunctions
 include("introduction.jl")
 include("notation.jl")
 include("dynamics_of_zeros.jl")
+include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 
 
