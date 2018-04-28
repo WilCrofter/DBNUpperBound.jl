@@ -17,6 +17,22 @@ function ϵₜₙ(t::Real, n::Int, u::Number)
 end
 
 """
+    Estimate of rₜₙ, Proposition 6.1 pp 13
+    """
+function rₜₙ(t::Real, n::Int, σ::Real, T::Real)
+    0 < t ≤ 1/2 || error("t must be positive and at most 1/2")
+    10 < T || error("T must be at least 10.")
+    err = ϵₜₙ(t,n,σ,T)
+    s=σ+im*T
+    r = Mₜ(t,σ,T)*bᵗₙ(t, n)*bigexp(-log(n)*(s+t/2*α(s)))
+    return r, r*err
+end                   
+
+function rₜₙ(t::Real, n::Int, s::Number)
+    return rₜₙ(t, n, real(s), imag(s))
+end
+
+"""
     Definition (57) pp 16
     """
 function ϵ̃(t::Real, σ::Real, T::Real)

@@ -13,18 +13,21 @@ end
 
 """
     We have, from equation (39) of the reference:
-
+    
     rₜₙ(s) = exp(-t/4×αₙ²)∫exp(-√(t)vαₙ)×r₀ₙ(s+√(t)v + t/2×αₙ)/√(π)×exp(-v²)dv
+    
     where
     r₀ₙ(s) = (1/8)×s(s-1)/2×√(π⁻ˢ)×Γ(s/2)×n⁻ˢ
     
+    and the default value of αₙ is α(s)-log(n) from equation (44), pp 14 of the reference.
+    
     Here we return a function which computes the log of the nth integrand at v, including the external factor, 
     """
-function log_integrand_rₜₙ(t::Real, s::Number, αₙ::Number)
+function log_integrand_rₜₙ(t::Real, s::Number, n::Int; αₙ::Number = α(s) - log(n))
     sign(imag(s)) == sign(imag(s+αₙ)) || error("ℑ(s) and ℑ(s+αₙ) must have the same sign.")
     c₀ = -log(8) -t/4*αₙ^2 - log(π)/2 # constant: log( 1/8×exp(-t/4×αₙ²)/√(π) )
     c₁ = -√(t)*αₙ              # multiplies v in log( (exp(-√(t)vαₙ) )
     c₂ = s+t/2*αₙ              # constant additive in argument s+√(t)v + t/2×αₙ
     c₃ = √(t)                  # mulitplier of v in same argument
-    return function (n::Int, v::Real) c₀ + c₁*v + log_r₀(n, c₂ + c₃*v) - v^2 end
+    return function (v::Real) c₀ + c₁*v + log_r₀(n, c₂ + c₃*v) - v^2 end
 end

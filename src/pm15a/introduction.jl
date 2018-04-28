@@ -29,6 +29,10 @@ function logM₀′(s::Number)
     return 1/(2*s) + 1/(s-1) + 1/2*log(s/(2*π))
 end
 
+function logMₑ′(σ::Real, T::Real)
+    return logM₀′(σ+im*T)
+end
+
 """ α
 
     alias for logM₀′; equation (9) 

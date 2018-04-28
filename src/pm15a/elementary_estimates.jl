@@ -1,6 +1,6 @@
 #= Elementary estimates: random checks for Lemma 5.1 pp 11
 
-This code is of dubious value at best: the claims of Lemma 5.1 don't need computational checks. It may or may not end up in the package, but the lemma_51vi does present some numerical issues.
+The claims of Lemma 5.1 don't need computational checks, but the "computational version" of the proof of lemma_51vi does present numerical issues which may confound later results.
 =#
 
 function lemma_51i(n::Int ;upper_limit::Real = 1e6)
@@ -43,10 +43,21 @@ function lemma_51vi(n::Int; upper_limit::Real = big(1e6))
     logx₀ = max.(log.(c),a./b)
     x₀ = map(exp, logx₀)
     x = x₀+rand(n).*upper_limit
+    # 1. Last step of the proof
     all(log.(x) .≥ a./b)  &&
-        all(b.*log.(x) .≥ a)
-    # NOTE: even though the following is formally equivalent to the foregoing,
-    # it sometimes yields false, hence is one possible source of numerical trouble.
-    #  all(b.*x.*log.(x) .≥ a.*x)
+        # 2. Even though the following is formally equivalent to 1,
+        # it sometimes yields false, hence is one possible source of numerical trouble.
+        #  all(b.*x.*log.(x) .≥ a.*x)
+        # 3. Log equivalent of 1.
+        all(log.(log.(x)) .≥ log.(a./b)) &&
+        # 4. Adding log.(x) to both sides of 3 is formally equivalent to 2: xlog(x) ≥ xa/b 
+        all(log.(x)+log.(log.(x)) .≥ log.(x) + log.(a./b)) &&
+        # 5. Splitting out -log.(b) sometimes yields false
+        # all(log.(x)+log.(log.(x)) .≥ log.(x) + log.(a)-log.(b))
+        # 6. Replacing log(x) by log(x-c) on the RHS is formally equivalent to xlog(x) ≥ (x-c)a/b
+        # hence to a/(xlog(x))- b/(x-c) ≤ 0.0 which is the essential step of the proof.
+        all(log.(x)+log.(log.(x)) .≥ log.(x-c) + log.(a./b))
+        # 7. the straightforward version of the formal inequality sometimes yields false.
+        # all(a./(x.*log.(x)) .≤ b./(x-c))
 end
     
