@@ -83,9 +83,11 @@ end
 function fₜ(t::Real, x::Real, y::Real)
     f1 = f2 = 0.0
     for n in 1:N(t,x)
-        b = bᵗₙ(t, n)
-        f1 += b/n^(s_star(t,x,y))
-        f2 += n^y*b/n^(s_star(t,x,y)'+κ(t,x,y))
+        logb = logbᵗₙ(t, n)
+        # b/n^(s_star(t,x,y))
+        f1 += bigexp(logb-log(n)*s_star(t,x,y))
+        # n^y*b/n^(s_star(t,x,y)'+κ(t,x,y))
+        f2 += bigexp(logb+log(n)*(y-s_star(t,x,y)'+κ(t,x,y))) 
     end
     return f1+γₜ(t,x,y)*f2
 end
@@ -99,6 +101,10 @@ end
     """
 function bᵗₙ(t::Real, n::Int)
     return bigexp(t/4*log(n)^2)
+end
+
+function logbᵗₙ(t::Real, n::Int)
+    return t/4*log(n)^2
 end
 
 """
@@ -198,3 +204,17 @@ function bound24(t::Real, z::Number)
     return bound24(t,real(z),imag(z))
 end
 
+"""  H̃(t:Real, x::Real, y::Real)
+    
+    Returns an effective approximation for Hₜ(x+iy)/B₀(x+iy) and error bound eA+eB+eC0 as per Theorem 1.3, equation (13) pp 3 of the reference.
+    """ 
+function H̃(t::Real, x::Real, y::Real)
+    in_region_5(t, x, y) || error("Arguments are not in region (5)")
+    return fₜ(t,x,y), eA(t,x,y)+eB(t,x,y)+eC0(t,x,y)
+end
+
+function H̃(t::Real, z::Number)
+    return H̃(t,real(z),imag(z))
+end
+
+             

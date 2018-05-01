@@ -16,9 +16,6 @@ include("EffectiveBounds.jl")
 include("uniform_bounds.jl")
 include("I_and_J.jl")
 
-function bigify(s::T) where {T<:Number}
-    return imag(s)==0 ? big(real(s)) : big(real(s))+im*big(imag(s))
-end
 
 # Notation:
 # Ht's argument is denoted z=x+iy where x,y are real.
@@ -26,11 +23,6 @@ end
 # The case of interest is t=y=0.4, and x>>0.0.
 # Specifically, x > 2e+5 is of interest.
 
-function bigexp(s::T) where {T<:Number}
-    ans = exp(real(s))
-    ans = exp(im*imag(s))*(isfinite(ans) && !(ans == 0) ? ans : exp(bigify(real(s))))
-    return imag(ans) ≈ 0.0 ? real(ans) : ans
-end
 
 function bigcos(s::T) where {T<:Number}
     return (bigexp(-im*s)+bigexp(im*s))/2

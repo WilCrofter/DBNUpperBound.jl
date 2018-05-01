@@ -1,8 +1,8 @@
 # de Bruijn Newman Upper Bound
 
-Julia code for [Polymath Problem 15](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant). This repository generally lags the [official repository](https://github.com/km-git-acc/dbn_upper_bound)--my interests are somewhat tangential to the mainstream and analytic number theory is not my field.
+Julia code following, i.e., having made no original contributions to, [Polymath Problem 15](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant).
 
-The notebook directory above is probably the best indicator of what's going on here.
+Status: Rewriting and refactoring for better accord with the current draft, [EFFECTIVE APPROXIMATION OF HEAT FLOW EVOLUTION OF THE RIEMANN XI FUNCTION, AND AN UPPER BOUND FOR THE DE BRUIJN-NEWMAN CONSTANT](https://github.com/teorth/dbn_upper_bound/blob/master/Writeup/debruijn.pdf) (PDF). This means notebooks and docs are obsolete, and general chaos prevail. Things should improve shortly. 
 
 To install this package and its dependencies:
 
@@ -13,13 +13,6 @@ To remain current:
 ```
 julia> Pkg.update("DBNUpperBound")
 ```
-
-### TODO:
-
-* Document and test everything which lacks same.
-
-### Issues:
-
 
 In Julia 0.6, `Base.runtests()` seems to have bugs. Meanwhile, the following alternative may serve:
 

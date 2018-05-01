@@ -1,6 +1,9 @@
 #= Elementary estimates: random checks for Lemma 5.1 pp 11
 
-The claims of Lemma 5.1 don't need computational checks, but the "computational version" of the proof of lemma_51vi does present numerical issues which may confound later results.
+The claims of Lemma 5.1 don't need computational checks, but a "computational version" of the proof of lemma_51vi does present cases in which provably correct O≤ relations fail computationally. 
+
+Via [Elementary Asymptotics](http://michaelnielsen.org/polymath1/index.php?title=Effective_bounds_on_H_t_-_second_approach), "We use O≤(X) to denote any quantity bounded in magnitude by at most X. An equality A=B using this notation means that any quantity of the form A is also of the form B, though we do not require the converse to be true (thus we break the symmetry of the equality relation)." 
+
 =#
 
 function lemma_51i(n::Int ;upper_limit::Real = 1e6)

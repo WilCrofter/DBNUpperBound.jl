@@ -1,7 +1,5 @@
 
 using DBNUpperBound
-using DBNUpperBound.Asymptotics
-using DBNUpperBound.PM15a
 using Base.Test
 
 function test_PM15a()
@@ -32,6 +30,13 @@ function test_PM15a()
     # Defer debugging until later in paper.
     # @test all([bound23(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
     # @test all([bound24(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
+
+    DBNUpperBound.PM15a.lemma_51i(1000)
+    DBNUpperBound.PM15a.lemma_51ii(1000)
+    DBNUpperBound.PM15a.lemma_51iii(1000)
+    DBNUpperBound.PM15a.lemma_51iv(1000)
+    DBNUpperBound.PM15a.lemma_51v(1000)
+    DBNUpperBound.PM15a.lemma_51vi(10000)
 
 end
 

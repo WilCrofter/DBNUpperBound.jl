@@ -16,21 +16,30 @@ function ϵₜₙ(t::Real, n::Int, u::Number)
     return ϵₜₙ(t, n, real(u), imag(u))
 end
 
-"""
+""" rₜₙ(t::Real, n::Int, σ::Real, T::Real)
+
     Estimate of rₜₙ, Proposition 6.1 pp 13
+    Returns the basic estimate and error term ϵₜₙ(σ+iT).
     """
 function rₜₙ(t::Real, n::Int, σ::Real, T::Real)
     0 < t ≤ 1/2 || error("t must be positive and at most 1/2")
     10 < T || error("T must be at least 10.")
-    err = ϵₜₙ(t,n,σ,T)
     s=σ+im*T
     r = Mₜ(t,σ,T)*bᵗₙ(t, n)*bigexp(-log(n)*(s+t/2*α(s)))
-    return r, r*err
+    return r, ϵₜₙ(t,n,σ,T)
 end                   
 
 function rₜₙ(t::Real, n::Int, s::Number)
     return rₜₙ(t, n, real(s), imag(s))
 end
+
+"""
+    Definition (51) pp 15
+    """
+function C₀(p::Real)
+    return p ≈ 0.5 || p ≈ -0.5 ? (1-im)/4 :(exp(π*im*(p^2/2 + 3/8)) - im*√(2)*cos(π*p/2))/2*cos(π*p)
+end
+
 
 """
     Definition (57) pp 16
