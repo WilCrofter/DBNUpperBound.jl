@@ -3,7 +3,7 @@ module PM15a
 using DBNUpperBound
 # using DBNUpperBound.Asymptotics
 using SpecialFunctions
-
+include("utilities.jl")
 include("introduction.jl")
 include("notation.jl")
 include("dynamics_of_zeros.jl")
@@ -17,6 +17,8 @@ export γₜ, κ, fₜ, ϵ̃, ϵₜₙ, s_star
 
 export complex_power, gaussian_identity # temporarily, anyway
 export log_r₀, log_integrand_rₜₙ
+
+export Hₜ, ζ
 
 
 
