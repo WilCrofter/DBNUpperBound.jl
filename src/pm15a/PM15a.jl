@@ -7,6 +7,7 @@ include("utilities.jl")
 include("introduction.jl")
 include("notation.jl")
 include("dynamics_of_zeros.jl")
+include("applying_the_fundamental_solution_for_the_heat_equation.jl")
 include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 
