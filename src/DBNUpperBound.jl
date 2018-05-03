@@ -35,6 +35,8 @@ export γₜ, κ, fₜ, ϵ̃, ϵₜₙ, s_star
 export complex_power, gaussian_identity # temporarily, anyway
 export log_r₀, log_integrand_rₜₙ
 
+export δ₁, F
+
 
 
     

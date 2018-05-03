@@ -17,6 +17,11 @@ function test_PM15a()
     @test B₀(t, z) == B₀(t,x,y)
     @test Mₜ(t,s) == Mₜ(t,s')'
 
+    # test Hₜ against reference values less than 1000
+    @test Hₜ(.4,30.0,.4)[1] ≈ -0.00010001026469315639165 - 7.1357019921469872653e-6*im
+    @test Hₜ(.4,100.0,.4)[1] ≈  6.7021522172791266841e-16 + 3.1337965840705569244e-16*im
+    @test Hₜ(.4,300.0,.4)[1] ≈ -4.0159674206251463624e-49 - 1.4006524430296850032e-49*im
+    
     # julia> UInt(Dates.value(Dates.now()))
     # 0x000039e5fab138e8
     srand(0x000039e5fab138e8) #random seed

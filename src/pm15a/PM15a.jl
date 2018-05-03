@@ -10,6 +10,7 @@ include("dynamics_of_zeros.jl")
 include("applying_the_fundamental_solution_for_the_heat_equation.jl")
 include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
+include("a_new_upper_bound.jl")
 
 
 export s⁺, M₀, logM₀, logM₀′, α, Mₜ, B₀
@@ -19,7 +20,9 @@ export γₜ, κ, fₜ, ϵ̃, ϵₜₙ, s_star
 export complex_power, gaussian_identity # temporarily, anyway
 export log_r₀, log_integrand_rₜₙ
 
-export Hₜ, ζ
+export Hₜ, ζ, bigexp, bigify
+
+export δ₁, F
 
 
 
