@@ -195,7 +195,7 @@ function bound23(t::Real, x::Real, y::Real)
     for n in 1:N₀
         bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*(bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
     end
-    return eA(t,x,y)+eB(t,x,y), bound
+    return eA(t,x,y)+eB(t,x,y) ≤ bound
 end
 
 function bound23(t::Real, z::Number)

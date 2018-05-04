@@ -1,4 +1,6 @@
-export ϵₜₙ, rₜₙ, ϵ̃, eA, eB, eC, eC0
+
+export ϵₜₙ, rₜₙ, RtN, A, B
+export ϵ̃, eA, eB, eC, eC0
 
 #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
@@ -35,6 +37,28 @@ function rₜₙ(t::Real, n::Int, s::Number)
     return rₜₙ(t, n, real(s), imag(s))
 end
 
+function est_utility(t::Real, σ::Real, T::Real)
+    T′ = T+π*t/8
+    a = √(T′/(2*π))
+    N₀ = floor(Int,a) # subscript 0 to distinquish from function N
+    p = 1-2*(a-N₀)
+    U = bigexp(-im*(T′/2*log(T′/(2*π))-T′/2-π/8))
+    return T′, a, N₀, p, U
+end
+
+function est_utility(t::Real, s::Number)
+    return est_utility(t,real(s),imag(s))
+end
+
+"""
+    Estimate of RₜN Proposition 6.3 pp 16
+    """
+function RtN(t::Real, σ::Real, T::Real)
+    T ≥ 100.0 || error("T = ℑ(s) must be at least 100.0")
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    return (-1)^(N₀-1)*U*bigexp(im*π*σ/4+t*π^2/64)*M₀(im*T′)*C₀(p), ϵ̃(σ+im*T) 
+end
+
 """
     Definition (51) pp 15
     """
@@ -43,6 +67,80 @@ function C₀(p::Real)
 end
 
 
+function A(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    # Recall that (1-y+im*x)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    ans = 0.0
+    for n in 1:N₀
+        # again, note that (1-y+im*x)/2 = s⁺(x,y)
+        ans += bᵗₙ(t,n)*bigexp(log(n)*(s+t/2*α(s)))
+    end
+    return Mₜ(t,s)*ans
+end
+
+function B(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    # Recall that (1-y+im*x)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    ans = 0.0
+    # Note that (1+y-im*x)/2 = 1-s⁺(x,y)
+    for n in 1:N₀
+        ans += bᵗₙ(t,n)*bigexp(log(n)*(1-s+t/2*α(1-s)))
+    end
+    return Mₜ(t,1-s)*ans
+end
+
+function C(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    return 2*(-1)^N₀*bigexp(-im*π*y/8 +t*π^2/64)*real(M₀(im*T′)*C₀(p)*U*exp(π*im/8))
+end
+
+function EA(t::Real,x::Real,y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    # Recall that (1-y+im*x)/2 = s⁺(x,y)
+    ans = 0.0
+    for n in 1:N₀
+        ans += bᵗₙ(t,n)*bigexp(log(n)*((1-y)/2)+t/2*real(α(s)))*ϵₜₙ(t,n,s)
+    end
+    return abs(Mₜ(t,s))*ans
+end
+
+function EB(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    # Recall that (1+y+im*x)/2 = 1-s⁺(x,y)'
+    ans = 0.0
+    for n in 1:N₀
+        ans += bᵗₙ(t,n)*bigexp(log(n)*((1+y)/2)+t/2*real(α(1-s')))*ϵₜₙ(t,n,1-s')
+    end
+    return abs(Mₜ(t,1-s'))*ans
+end
+
+function EC(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
+    s = s⁺(x,y)
+    σ, T = real(s), imag(s)
+    T′, a, N₀, p, U = est_utility(t,σ,T)
+    # Recall (1-y+im*x)/2 = s⁺(x,y)
+    # and    (1+y+im*x)/2 = 1-s⁺(x,y)'
+    return bigexp(t*π^2/64)*abs(M₀(im*T′))*(ϵ̃(t,s)+ϵ̃(t,1-s'))
+end
+                                         
+
+        
 """
     Definition (57) pp 16
     """

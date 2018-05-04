@@ -37,7 +37,7 @@ end
 
 
 function rₜₙ_by_integration(t::Real, s::Number, n::Int; αₙ::Number = α(s) - log(n),
-                            lower_limit::Real=big(-10.0), upper_limit::Real=big(10.0))
-    g(v) = rₜₙ_integrand(t,s,n,αₙ=αₙ)
+                            lower_limit::Float64=-10.0, upper_limit::Float64=10.0)
+    g = rₜₙ_integrand(t,s,n,αₙ=αₙ)
     return quadgk(g,upper_limit,0.0,lower_limit)
 end
