@@ -30,10 +30,12 @@ using .PM15a
 export Hₜ, ζ
 export s⁺, M₀, logM₀, logM₀′, α, Mₜ, B₀
 export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
-export γₜ, κ, fₜ, ϵ̃, ϵₜₙ, s_star
+export γₜ, κ, fₜ, s_star
 
 export complex_power, gaussian_identity # temporarily, anyway
-export log_r₀, log_integrand_rₜₙ
+export r₀, rₜₙ_integrand, rₜₙ_by_integration
+export ϵₜₙ, rₜₙ, ϵ̃, eA, eB, eC, eC0
+
 
 export δ₁, F
 

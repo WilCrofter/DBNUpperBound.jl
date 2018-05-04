@@ -14,12 +14,20 @@ s⁺(x::Real, y::Real) = (1-y+im*x)/2
 s⁺(z::Number) = s⁺(real(z),imag(z))
 
 
+"""
+
+    M₀(s) := 1/8 × s(s-1)/2 × π^(-s/2)√(2π) × exp((s/2-1/2)Log(s/2)-s/2) Equation (6) pp 18.
+    """
 function M₀(s::Number)
-    return 1/8*s*(s-1)/2*π^(-s/2)*√(2*π)*bigexp((s-1)/2*log(s/2)-s/2)
+    return bigexp(logM₀(s))
 end
 
 function logM₀(s::Number)
-    return log(s) + log(s-1) - s/2*log(π) + log(√(2*π)/16) + (s/2-1/2)*log(s/2)-s/2
+    if s ≈ 0 || s ≈ 1
+        return -Inf
+    else
+        return log(s) + log(s-1) - s/2*log(π) + log(√(2*π)/16) + (s/2-1/2)*log(s/2)-s/2
+    end
 end
 
 """

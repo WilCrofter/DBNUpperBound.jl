@@ -1,3 +1,5 @@
+export ϵₜₙ, rₜₙ, ϵ̃, eA, eB, eC, eC0
+
 #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
     (1-y-im*x)/2 = s⁺(x,y)'
