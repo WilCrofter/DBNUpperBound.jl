@@ -1,5 +1,5 @@
 
-export ϵₜₙ, rₜₙ, RtN, A, B
+export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC
 export ϵ̃, eA, eB, eC, eC0
 
 #= Recall

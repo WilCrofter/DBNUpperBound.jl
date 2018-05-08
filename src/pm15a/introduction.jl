@@ -1,3 +1,7 @@
+export s⁺, M₀, logM₀, logM₀′, α, Mₜ, B₀
+export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
+export γₜ, κ, fₜ, s_star
+
 """ s⁺(x,y)
 
     Return (1-y+im*x)/2 = (1+im*(x+im*y))/2. The superscript + refers to the sign of im*(x+im*y), hence the sign of x in the result.
@@ -46,6 +50,12 @@ end
     alias for logM₀′; equation (9) 
     """
 α = logM₀′
+
+""" α′
+
+    Derivative of α
+"""
+α′(s::Number) = -1/(2*s^2)-1/(s-1)^2 + 1/(2*s)
 
 function Mₜ(t::Real, s::Number)
     return bigexp(t/4*(α(s))^2)*M₀(s)

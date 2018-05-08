@@ -34,8 +34,10 @@ export γₜ, κ, fₜ, s_star
 
 export complex_power, gaussian_identity # temporarily, anyway
 export r₀, rₜₙ_integrand, rₜₙ_by_integration
-export ϵₜₙ, rₜₙ, ϵ̃, eA, eB, eC, eC0
 
+# estimates for large x
+export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC
+export ϵ̃, eA, eB, eC, eC0
 
 export δ₁, F
 
