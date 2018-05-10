@@ -8,8 +8,8 @@ export r₀, rₜₙ_integrand, rₜₙ_by_integration
            = (1/8)×(s-1)×√(π⁻ˢ)×n⁻ˢ×s/2Γ(s/2)
     """
 function r₀(n::Int, s::Number)
-    c₁ = s≈0 ? 1.0 : s/2*bigexp(lgamma(s/2)) # s/2×Γ(s/2) with singularity at s≈0.0 removed.
-    c₂ = 1/8*(s-1)*bigexp(-s*(log(π)/2 + n)) # 1/8×(s-1)×√(π⁻ˢ)×n⁻ˢ
+    c₁ = s≈0 ? 1.0 : s/2*big(e)^(lgamma(s/2)) # s/2×Γ(s/2) with singularity at s≈0.0 removed.
+    c₂ = 1/8*(s-1)*big(e)^(-s*(log(π)/2 + n)) # 1/8×(s-1)×√(π⁻ˢ)×n⁻ˢ
     return c₁*c₂
 end
 
@@ -27,11 +27,11 @@ end
     """
 function rₜₙ_integrand(t::Real, s::Number, n::Int; αₙ::Number = α(s) - log(n))
     sign(imag(s)) == sign(imag(s+αₙ)) || error("ℑ(s) and ℑ(s+αₙ) must have the same sign.")
-    c₀ = bigexp(-t/4*αₙ^2)     # external factor
+    c₀ = big(e)^(-t/4*αₙ^2)     # external factor
     c₁ = -√(t)*αₙ              # multiplies v in exp(-√(t)vαₙ)
     c₂ = s+t/2*αₙ              # constant additive in argument s+√(t)v + t/2×αₙ
     c₃ = √(t)                  # mulitplier of v in same argument
-    return function (v::Real) c₀*bigexp(c₁*v-v^2)*r₀(n, c₂ + c₃*v) end
+    return function (v::Real) c₀*big(e)^(c₁*v-v^2)*r₀(n, c₂ + c₃*v) end
 end
 
 

@@ -8,7 +8,7 @@
 function Hₜ(t::Real, x::Real, y::Real; lower_limit::Real=-10.0, upper_limit::Real=+10.0) 
     s=s⁺(x,y)
     srt = √(t)
-    q(v) = ξ(s+srt*v)*bigexp(-v^2)/8/√(π)
+    q(v) = ξ(s+srt*v)*big(e)^(-v^2)/8/√(π)
     return quadgk(q,lower_limit,0.0,upper_limit)
 end
 

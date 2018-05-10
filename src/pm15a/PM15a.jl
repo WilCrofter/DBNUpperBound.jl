@@ -12,18 +12,11 @@ include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 include("a_new_upper_bound.jl")
 
-
-export s⁺, M₀, logM₀, logM₀′, α, Mₜ, B₀
-export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
-export γₜ, κ, fₜ, s_star
-
 export complex_power, gaussian_identity # temporarily, anyway
 
-export Hₜ, ζ, bigexp, bigify
+export Hₜ
 
 export δ₁, F
-
-
 
 
 end

@@ -14,7 +14,7 @@ function F(N::Int, t::Real, σ::Real)
     # Σ bᵗₙ/n^σ = Σ exp(log(bᵗₙ)-σ*log(n))
     ans = 0.0
     for n in 1:N
-        ans += bigexp(logbᵗₙ(t,n)-σ*log(n))
+        ans += big(e)^(logbᵗₙ(t,n)-σ*log(n))
     end
     return ans
 end

@@ -27,7 +27,8 @@ end
 
 function lemma_51iv(n::Int; upper_limit::Real = 1e6)
     x = rand(n)*upper_limit
-    all( x .≤ 1+(map(bigexp,x)-1) )
+    u = [big(e)^v - 1 for v in x]
+    all( x .≤ 1+u )
 end
 
 function lemma_51v(n::Int; upper_limit::Real = 1e6)

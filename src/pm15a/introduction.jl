@@ -23,7 +23,7 @@ s⁺(z::Number) = s⁺(real(z),imag(z))
     M₀(s) := 1/8 × s(s-1)/2 × π^(-s/2)√(2π) × exp((s/2-1/2)Log(s/2)-s/2) Equation (6) pp 18.
     """
 function M₀(s::Number)
-    return bigexp(logM₀(s))
+    return big(e)^(logM₀(s))
 end
 
 function logM₀(s::Number)
@@ -58,7 +58,7 @@ end
 α′(s::Number) = -1/(2*s^2)-1/(s-1)^2 + 1/(2*s)
 
 function Mₜ(t::Real, s::Number)
-    return bigexp(t/4*(α(s))^2)*M₀(s)
+    return big(e)^(t/4*(α(s))^2)*M₀(s)
 end
 
 function Mₜ(t::Real, σ::Real, T::Real)
@@ -103,9 +103,9 @@ function fₜ(t::Real, x::Real, y::Real)
     for n in 1:N(t,x)
         logb = logbᵗₙ(t, n)
         # b/n^(s_star(t,x,y))
-        f1 += bigexp(logb-log(n)*s_star(t,x,y))
+        f1 += big(e)^(logb-log(n)*s_star(t,x,y))
         # n^y*b/n^(s_star(t,x,y)'+κ(t,x,y))
-        f2 += bigexp(logb+log(n)*(y-s_star(t,x,y)'+κ(t,x,y))) 
+        f2 += big(e)^(logb+log(n)*(y-s_star(t,x,y)'+κ(t,x,y))) 
     end
     return f1+γₜ(t,x,y)*f2
 end
@@ -118,7 +118,7 @@ end
     Equation (15) pp 4.
     """
 function bᵗₙ(t::Real, n::Int)
-    return bigexp(t/4*log(n)^2)
+    return big(e)^(t/4*log(n)^2)
 end
 
 function logbᵗₙ(t::Real, n::Int)
@@ -193,7 +193,7 @@ function bound22(t::Real, x::Real, y::Real)
 end
 
 function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
-    return bᵗₙ(t,n)/n^sᵣ*(bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+    return bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
 end
 
 function bound23(t::Real, x::Real, y::Real)
@@ -203,7 +203,7 @@ function bound23(t::Real, x::Real, y::Real)
     κₐ = abs(κ(t,x,y))
     sᵣ = real(s_star(t,x,y))
     for n in 1:N₀
-        bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*(bigexp((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+        bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
     end
     return eA(t,x,y)+eB(t,x,y) ≤ bound
 end
@@ -214,7 +214,7 @@ end
 
 function bound24(t::Real, x::Real, y::Real)
     return eC0(t,x,y) ≤ (x/(4*π))^(-(1+y)/4) *
-        bigexp(-t/16*log(x/(4*π))^2 + (1.24*(3^y+3^(-y)))/(N(t,x)-0.125) +
+        big(e)^(-t/16*log(x/(4*π))^2 + (1.24*(3^y+3^(-y)))/(N(t,x)-0.125) +
                (3*abs(log(x/(4*π))+im*π/2)+10.44)/(x-8.52))
 end
 

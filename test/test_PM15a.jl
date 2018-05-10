@@ -11,7 +11,7 @@ function test_PM15a()
     t = 0.4
 
     @test s == s⁺(z)
-    @test M₀(s) ≈ bigexp(logM₀(s))
+    @test M₀(s) ≈ big(e)^(logM₀(s))
     @test logM₀(s)+logM₀′(s)*1e-6 ≈ logM₀(s+1e-6)
     @test logM₀(s)+logM₀′(s)*(1e-6)*(1+im) ≈ logM₀(s+1e-6*(1+im))
     @test B₀(t, z) == B₀(t,x,y)
