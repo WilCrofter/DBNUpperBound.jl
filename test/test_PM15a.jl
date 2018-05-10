@@ -10,12 +10,14 @@ function test_PM15a()
     s = (1+im*z)/2
     t = 0.4
 
-    @test s == s⁺(z)
-    @test M₀(s) ≈ big(e)^(logM₀(s))
-    @test logM₀(s)+logM₀′(s)*1e-6 ≈ logM₀(s+1e-6)
-    @test logM₀(s)+logM₀′(s)*(1e-6)*(1+im) ≈ logM₀(s+1e-6*(1+im))
-    @test B₀(t, z) == B₀(t,x,y)
-    @test Mₜ(t,s) == Mₜ(t,s')'
+    setprecision(53)do # while conversion to multiprecision is incomplete
+        @test s == s⁺(z)
+        @test M₀(s) ≈ big(e)^(logM₀(s))
+        @test logM₀(s)+logM₀′(s)*1e-6 ≈ logM₀(s+1e-6)
+        @test logM₀(s)+logM₀′(s)*(1e-6)*(1+im) ≈ logM₀(s+1e-6*(1+im))
+        @test B₀(t, z) == B₀(t,x,y)
+        @test Mₜ(t,s) == Mₜ(t,s')'
+    end
 
     # test Hₜ against reference values less than 1000
     @test Hₜ(.4,30.0,.4)[1] ≈ -0.00010001026469315639165 - 7.1357019921469872653e-6*im

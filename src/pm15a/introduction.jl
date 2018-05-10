@@ -1,4 +1,4 @@
-export s⁺, M₀, logM₀, logM₀′, α, Mₜ, B₀
+export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
 export γₜ, κ, fₜ, s_star
 

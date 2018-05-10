@@ -141,13 +141,14 @@ end
                                          
 
         
-"""
-    Definition (57) pp 16
+""" ϵ̃(t::Real, σ::Real, T::Real)
+
+    Returns a multiprecision calculation of ϵ̃, Definition (57) pp 16 of the reference.
     """
 function ϵ̃(t::Real, σ::Real, T::Real)
-    T′ = T - π*t/8
+    T′ = big(T) - π*t/8
     a = √(T′/(2*π))
-    return ((0.397*9^σ)/(a-0.125) + 5/(3*(T′-3.33)))*big(e)^(3.49/(T′-3.33))
+    return ((0.397*9^big(σ))/(a-0.125) + 5/(3*(T′-3.33)))*big(e)^(3.49/(T′-3.33))
 end
 
 function ϵ̃(t::Real, u::Number)

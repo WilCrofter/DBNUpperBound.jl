@@ -1,3 +1,5 @@
+export complex_power, gaussian_identity # temporarily, anyway
+
 """ complex_power(z::Number, w::Number)
 
     Return big(e)^(wLog(z)) where Log refers to the standard branch of the log (which is Julia's default.)

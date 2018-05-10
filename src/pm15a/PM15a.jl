@@ -12,9 +12,6 @@ include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 include("a_new_upper_bound.jl")
 
-export complex_power, gaussian_identity # temporarily, anyway
-
-export Hₜ
 
 export δ₁, F
 

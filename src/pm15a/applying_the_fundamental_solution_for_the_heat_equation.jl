@@ -1,3 +1,5 @@
+export Hₜ
+
 """ Hₜ(t::Real, x::Real, y::Real)
 
     Estimates Hₜ via equation (34), pp 10 of the reference, 1/8∫ξ((1+iz)/2+v√(π))exp(-v²)dv/√(π).
