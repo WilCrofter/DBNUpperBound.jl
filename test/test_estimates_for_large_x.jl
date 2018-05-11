@@ -1,5 +1,6 @@
 using DBNUpperBound
 using Base.Test
+include("Ht_ref_values.jl") # Htref, a Dictionary of Hₜ reference values provided by Anonymous
 
 function test_estimates_for_large_x()
     setprecision(80)do
@@ -29,7 +30,37 @@ function test_estimates_for_large_x()
             αₙ = α(s)-log(n)
             @test M₀(s)*big(e)^(t/4*αₙ^2-s*log(n)) ≈ Mₜ(t,s)*bᵗₙ(t,n)/n^(s+t/2*α(s))
         end
-        
+
+        # Inequality (45) pp 15, testing closed form and quadrature
+        for i in 1:length(s5)
+            t = r5[i,1]
+            T = imag(s5[i])
+            lhsq = quadgk((v)->big(e)^(t*v^2/(2*(T-3.08))-v^2)/√(pi),-10.0,10.0)
+            lhse = √(1-big(t)/(2*(T-3.08)))
+            rhs = big(e)^(t/(4(T-3.33)))
+            @test lhsq[1] ≤ rhs+lhsq[2] && lhse ≤ rhs && lhse^2 ≤ rhs
+        end
+
+        # Test crude bound Hₜ(z) = A(z)+B(z)+O≤(EA(z)+EB(z)+EC₀(z))
+        # The expression is taken to mean that
+        #          |Hₜ(z)| ≤ |A(z)+B(z) + EA(z)+EB(z)+EC₀(z)|
+        # which implies
+        #          |Hₜ(z)| ≤ |A(z)+B(z)| + EA(z)+EB(z)+EC₀(z)
+        # by the triangle inequality and the fact that the error terms are ≥0.
+        #
+        # Anonymous provided exact calculations of Hₜ for t=y=.4 and
+        # x = 10, 30, 100, 300, 1000, 3000, 10000. Only values of x
+        # exceeding 200 are in region 5.
+        t=y=.4
+        for x in [300, 1000, 3000, 10000]
+            @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC₀(t,x,y))
+        end
+
+        # Test finer bound Hₜ(z) = A(z)+B(z)-C(z)+O≤(EA(z)+EB(z)+EC(z))
+        for x in [300, 1000, 3000, 10000]
+            @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)-C(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC(t,x,y))
+        end
+
 
     end # precision
 end

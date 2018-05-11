@@ -42,7 +42,7 @@ export complex_power, gaussian_identity # temporarily, anyway
 export r₀, rₜₙ_integrand, rₜₙ_by_integration
 
 # estimates for large x
-export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC
+export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC, EC₀
 export ϵ̃, eA, eB, eC, eC0
 
 export δ₁, F
