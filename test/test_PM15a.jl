@@ -48,3 +48,5 @@ function test_PM15a()
 end
 
 test_PM15a()
+
+include("test_estimates_for_large_x.jl")
