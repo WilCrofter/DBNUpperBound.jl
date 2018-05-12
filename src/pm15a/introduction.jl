@@ -179,48 +179,8 @@ function N(t::Real, x::Real)
 end
 
 
+# TODO: move these bounds to tests
 
-function bound20(t::Real, x::Real, y::Real)
-    return abs(γₜ(t,x,y)) ≤ exp(0.02*y)*(x/(4*π))^(-y/2)
-end
-
-function bound21(t::Real,x::Real,y::Real)
-    return real(s_star(t,x,y)) ≥ (1+y)/2 + t/4*log(x/(4*π)) - t*max(0.0, 1-3*y+(4*y*(1+y))/x^2)/(2*x^2)
-end
-
-function bound22(t::Real, x::Real, y::Real)
-    return abs(κ(t,x,y)) ≤ t*y/(2*(x-6))
-end
-
-function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
-    return bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
-end
-
-function bound23(t::Real, x::Real, y::Real)
-    bound=0.0
-    N₀ = N(t,x)
-    γₐ = abs(γₜ(t,x,y))
-    κₐ = abs(κ(t,x,y))
-    sᵣ = real(s_star(t,x,y))
-    for n in 1:N₀
-        bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
-    end
-    return eA(t,x,y)+eB(t,x,y) ≤ bound
-end
-
-function bound23(t::Real, z::Number)
-    return bound23(t,real(z),imag(z))
-end
-
-function bound24(t::Real, x::Real, y::Real)
-    return eC0(t,x,y) ≤ (x/(4*π))^(-(1+y)/4) *
-        big(e)^(-t/16*log(x/(4*π))^2 + (1.24*(3^y+3^(-y)))/(N(t,x)-0.125) +
-               (3*abs(log(x/(4*π))+im*π/2)+10.44)/(x-8.52))
-end
-
-function bound24(t::Real, z::Number)
-    return bound24(t,real(z),imag(z))
-end
 
 """  H̃(t:Real, x::Real, y::Real)
     
@@ -228,7 +188,7 @@ end
     """ 
 function H̃(t::Real, x::Real, y::Real)
     in_region_5(t, x, y) || error("Arguments are not in region (5)")
-    return fₜ(t,x,y), eA(t,x,y)+eB(t,x,y)+eC0(t,x,y)
+    return fₜ(t,x,y)+eA(t,x,y)+eB(t,x,y)+eC0(t,x,y)
 end
 
 function H̃(t::Real, z::Number)

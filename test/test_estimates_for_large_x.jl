@@ -3,6 +3,7 @@ using Base.Test
 include("Ht_ref_values.jl") # Htref, a Dictionary of Hₜ reference values provided by Anonymous
 
 function test_estimates_for_large_x()
+    info("Testing estimates for large x")
     setprecision(80)do
         # julia> UInt(Dates.value(Dates.now()))
         # 0x000039e6618e0dda
@@ -60,7 +61,6 @@ function test_estimates_for_large_x()
         for x in [300, 1000, 3000, 10000]
             @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)-C(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC(t,x,y))
         end
-
 
     end # precision
 end

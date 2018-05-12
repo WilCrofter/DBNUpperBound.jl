@@ -194,6 +194,7 @@ end
     Definition (69) pp. 23.
     """
 function eA(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
     #= Recall (1-y+im*x)/2 = s⁺(x,y) =#
     s = s⁺(x,y)
     ans = 0.0
@@ -216,6 +217,7 @@ end
     Definition (70) pp. 23.
     """
 function eB(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
     #= Recall
     (1+y+im*x)/2 = 1-s⁺(x,y)'   
     =#
@@ -237,6 +239,7 @@ end
     Definition (71) pp. 23.
     """
 function eC(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
     #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
     (1+y+im*x)/2 = 1-s⁺(x,y)'
@@ -258,6 +261,7 @@ end
     Definition (72) pp. 23.
     """
 function eC0(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("Parameters are not in region (5)")
     #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
     (1+y+im*x)/2 = 1-s⁺(x,y)'
