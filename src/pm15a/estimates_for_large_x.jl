@@ -21,6 +21,23 @@ function ϵₜₙ(t::Real, n::Int, u::Number)
     return ϵₜₙ(t, n, real(u), imag(u))
 end
 
+"""
+    Upper bound for ϵₜₙ as given in the last line of the proof of Prop 6.6 iv.
+    ϵₜₙ((1±y+ix)/2) ≤ exp((t²/32*log²(x/(4πn²))+0.313)/(T-3.33))-1
+    equivalently, ϵₜₙ((1±y+ix)/2) ≤ exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1
+    since T=x/2 by convention.
+
+    Note that x/2-6.66 rather than x-6.66 appears in the denominator 
+    """
+function ϵ̃ₜₙ(t::Real, n::Int, σ::Real, T::Real)
+    x=2*T
+    return big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)) - 1
+end
+
+function ϵ̃ₜₙ(t::Real, n::Int, s::Number)
+    return  ϵ̃ₜₙ(t,n,real(s),imag(s))
+end
+
 """ rₜₙ(t::Real, n::Int, σ::Real, T::Real)
 
     Estimate of rₜₙ, Proposition 6.1 pp 13
@@ -72,7 +89,9 @@ end
 
 """ A(t::Real, x::Real, y::Real)
 
-    A(x+iy) = Mₜ((1-y+ix)/2)*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))
+    Returns A and error estimate EA for A
+    where A(x+iy) = Mₜ((1-y+ix)/2)*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))
+          EA(x+iy) = |Mₜ((1-y+ix)/2)*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))|*ϵₜₙ(t,x,y)
     Corollary 6.4, pp 22. 
     """
 function A(t::Real, x::Real, y::Real)
@@ -81,20 +100,25 @@ function A(t::Real, x::Real, y::Real)
     σ, T = real(s), imag(s)
     # Recall that (1-y+im*x)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
     T′, a, N₀, p, U = est_utility(t,σ,T)
-    ans = big(0.0)
+    astar = (s+t/2*α(s))
+    ans = err = 0.0
     for n in 1:N₀
         # again, note that (1-y+im*x)/2 = s⁺(x,y)
-        ans += bᵗₙ(t,n)*big(e)^(log(n)*(s+t/2*α(s)))
+        tmp = bᵗₙ(t,n)*big(e)^(-log(n)*astar)
+        ans += tmp
+        err += abs(tmp)*ϵₜₙ(t,n,s)
     end
-    return Mₜ(t,s)*ans
+    return Mₜ(t,s)*ans, abs(Mₜ(t,s))*err
 end
 
 function A(t::Real, z::Number)
     return A(t, real(z), imag(z))
 end
 
-"""
-    B(x+iy) = Mₜ((1+y-ix)/2)*∑bᵗₙ/n^((1+y-ix)/2 +t/2*α((1+y-ix)/2))
+""" Returns B and error estimate EB for B
+
+    where B(x+iy) = Mₜ((1+y-ix)/2)*∑bᵗₙ/n^((1+y-ix)/2 +t/2*α((1+y-ix)/2))
+    and  EB(x+iy) = |Mₜ((1+y-ix)/2)|*∑|bᵗₙ/n^((1+y-ix)/2 +t/2*α((1+y-ix)/2))|*ϵₜₙ((1+y+ix)/2)
     Corollary 6.4, pp 22. 
     """
 function B(t::Real, x::Real, y::Real)
@@ -103,21 +127,35 @@ function B(t::Real, x::Real, y::Real)
     σ, T = real(s), imag(s)
     # Recall that (1-y+ix)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
     T′, a, N₀, p, U = est_utility(t,σ,T)
-    ans = 0.0
+    ans = err = 0.0
     # Note that (1+y-ix)/2 = 1-s⁺(x,y)
+    bstar = 1-s + t/2*α(1-s)
     for n in 1:N₀
-        ans += bᵗₙ(t,n)*big(e)^(log(n)*(1-s+t/2*α(1-s)))
+        tmp = bᵗₙ(t,n)*big(e)^(-log(n)*bstar)
+        ans += tmp
+        err += abs(tmp)*ϵₜₙ(t,n,1-s')
     end
-    return Mₜ(t,1-s)*ans
+    return Mₜ(t,1-s)*ans, abs(Mₜ(t,1-s))*err
 end
 
-
+""" 
+    Returns C and error estimates EC, and EC₀
+    where C = 2*(-1)^N*exp(-i*π*y/8 +t*π^2/64)*real(M₀(im*T′)*C₀(p)*U*exp(π*i/8))
+         EC = exp(t*π^2/64)*abs(M₀(im*T′))*(ϵ̃(t,s)+ϵ̃(t,1-s'))
+    and EC₀ = exp(t*π^2/64)*abs(M₀(im*T′))*(1+ϵ̃(t,s)+ϵ̃(t,1-s'))
+    Corollary 6.4 pp. 22
+    """
 function C(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
     T′, a, N₀, p, U = est_utility(t,σ,T)
-    return 2*(-1)^N₀*big(e)^(-im*π*y/8 +t*π^2/64)*real(M₀(im*T′)*C₀(p)*U*exp(π*im/8))
+    ans = 2*(-1)^N₀*big(e)^(-im*π*y/8 +t*π^2/64)*real(M₀(im*T′)*C₀(p)*U*exp(π*im/8))
+    tmp = big(e)^(t*π^2/64)*abs(M₀(im*T′))
+    ẽ=ϵ̃(t,s)+ϵ̃(t,1-s')
+    EC = tmp*ẽ
+    EC₀= tmp*(1+ẽ)
+    return ans, EC, EC₀
 end
 
 """ EA(t::Real,x::Real,y::Real)
@@ -128,12 +166,15 @@ end
 function EA(t::Real,x::Real,y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
+    # rastar is the real part of astar = s+t/2*α(s) = (1-y)/2 + t/2*α((1-y+ix)/2)
+    # which appears in the definition of A
+    rastar = real(s+t/2*α(s))
     σ, T = real(s), imag(s)
     T′, a, N₀, p, U = est_utility(t,σ,T)
     # Recall that (1-y+im*x)/2 = s⁺(x,y)
     ans = big(0.0)
     for n in 1:N₀
-        ans += bᵗₙ(t,n)*big(e)^(log(n)*((1-y)/2)+t/2*real(α(s)))*ϵₜₙ(t,n,s)
+        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rastar)*ϵₜₙ(t,n,s)
     end
     return abs(Mₜ(t,s))*ans
 end
@@ -149,9 +190,14 @@ function EB(t::Real, x::Real, y::Real)
     σ, T = real(s), imag(s)
     T′, a, N₀, p, U = est_utility(t,σ,T)
     # Recall that (1+y+im*x)/2 = 1-s⁺(x,y)'
+    # Also note that α(1-s') = α(1-s)'
+    # Hence rbstar, below is the same as the real
+    # part of bstar which appears in the def of B.
+    rbstar = real(1-s' + t/2*α(1-s'))
     ans = 0.0
+    err = 0.0
     for n in 1:N₀
-        ans += bᵗₙ(t,n)*big(e)^(log(n)*((1+y)/2)+t/2*real(α(1-s')))*ϵₜₙ(t,n,1-s')
+        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rbstar)*ϵₜₙ(t,n,1-s')
     end
     return abs(Mₜ(t,1-s'))*ans
 end
@@ -204,11 +250,16 @@ function eA(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     #= Recall (1-y+im*x)/2 = s⁺(x,y) =#
     s = s⁺(x,y)
+    # Recall that κ := t/2*(α(s)-α(1-s')) TODO:
+    # rastar is the real part of astar = s+t/2*α(s) = (1-y)/2 + t/2*α((1-y+ix)/2)
+    # which appears in the definition of A
+    rastar = real(s+t/2*α(s))
     ans = 0.0
     skᵣ = real(s+κ(t,x,y))
     for n in 1:N(t,x)
-        ans += bᵗₙ(t,n)*big(e)^((y-real(s+κ(t,x,y)))*log(n))*ϵₜₙ(t,n,s)
+        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rastar)*ϵₜₙ(t,n,s)
     end
+    # Recall that γ = Mₜ(s)/Mₜ(1-s)
     return abs(γₜ(t,x,y))*ans
 end
 
@@ -229,10 +280,15 @@ function eB(t::Real, x::Real, y::Real)
     (1+y+im*x)/2 = 1-s⁺(x,y)'   
     =#
     s= s⁺(x,y)
-    sᵣ = real(s_star(t,1-s'))
+    # Recall that (1+y+im*x)/2 = 1-s⁺(x,y)'
+    # Also note that α(1-s') = α(1-s)'
+    # Hence rbstar, below is the same as the real
+    # part of bstar which appears in the def of B,
+    # and is identical to the rbstar of EB.
+    rbstar = real(1-s' + t/2*α(1-s'))
     ans = 0.0
     for n in 1:N(t,x)
-        ans += bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*ϵₜₙ(t,n,1-s')
+        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rbstar)*ϵₜₙ(t,n,1-s')
     end
     return ans
 end
@@ -288,21 +344,7 @@ function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t
     return bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
 end
 
-"""
-    Upper bound for ϵₜₙ as given in the last line of the proof of Prop 6.6 iv.
-    ϵₜₙ((1±y+ix)/2) ≤ exp((t²/32*log²(x/(4πn²))+0.313)/(T-3.33))-1
-    equivalently, ϵₜₙ((1±y+ix)/2) ≤ exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1
-    since T=x/2 by convention.
 
-    Note that x/2-6.66 rather than x-6.66 appears in the denominator 
-    """
-function ϵ̃ₜₙ(t::Real, n::Int, x::Real, y::Real)
-    return big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)) - 1
-end
-
-function ϵ̃ₜₙ(t::Real, n::Int, s::Number)
-    return  ϵ̃ₜₙ(t,n,real(s),imag(s))
-end
  
 
 """ 
@@ -312,7 +354,8 @@ end
     """
 function ẽA(t::Real, x::Real, y::Real)
     bound = 0.0
-    sᵣ = real(s_star(t,x,y))
+    s = s⁺(x,y)
+    sᵣ=astar = real(s+t/2*α(s))
     N₀=N(t,x)
     for n in 1:N₀
         bound += bᵗₙ(t,n)*big(e)^(log(n)*(y-sᵣ))*ϵ̃ₜₙ(t,n,x,y) 

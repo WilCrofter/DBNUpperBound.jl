@@ -54,15 +54,22 @@ function test_estimates_for_large_x()
         # exceeding 200 are in region 5.
         t=y=.4
         for x in [300, 1000, 3000, 10000]
-            @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC₀(t,x,y))
+            Ã,EÃ = A(t,x,y)
+            B̃,EB̃ = B(t,x,y)
+            EC̃₀  = C(t,x,y)[3]
+            @test abs(Htref[x]) ≤ abs(Ã+B̃)+EÃ+EB̃+EC̃₀
         end
 
+        
         # Test finer bound Hₜ(z) = A(z)+B(z)-C(z)+O≤(EA(z)+EB(z)+EC(z))
         for x in [300, 1000, 3000, 10000]
-            @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)-C(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC(t,x,y))
+            Ã,EÃ = A(t,x,y)
+            B̃,EB̃ = B(t,x,y)
+            C̃,EC̃ = C(t,x,y)[1:2]
+            @test abs(Htref[x]) ≤ abs(Ã+B̃-C̃)+EÃ+EB̃+EC̃
         end
-
-        # Test bounds for ϵₜₙ, ẽA, ẽB
+        
+        # Test bounds for ϵₜₙ
         for i in 1:size(r5,1)
             t,x,y = r5[i,1],r5[i,2],r5[i,3]
             n = n5[i]
@@ -73,10 +80,8 @@ function test_estimates_for_large_x()
             @test (t^2/8*abs(α(1-s')-log(n))^2+t/4+1/6)/(T-3.33) ≤ (t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)
             @test abs(ϵₜₙ(t,n,s)) ≤ abs(ϵ̃ₜₙ(t,n,s))
             @test abs(ϵₜₙ(t,n,1-s')) ≤ abs(ϵ̃ₜₙ(t,n,1-s'))
-            # @test eA(t,x,y) ≤ ẽA(t,x,y)
-            @test abs(eB(t,x,y)) ≤ abs(ẽB(t,x,y))
         end
-
+        
     end # precision
 end
 
