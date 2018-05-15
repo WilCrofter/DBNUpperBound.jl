@@ -1,6 +1,7 @@
 export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
-export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
+export region_5, in_region_5
 export γₜ, κ, fₜ, s_star
+export N
 
 """ s⁺(x,y)
 
@@ -143,8 +144,10 @@ function γₜ(t::Real, z::Number)
     return γₜ(t, real(z), imag(z))
 end
 
-"""
-    Equation (17) pp 4.
+""" s_star(t,x,y)
+    
+    Returns s* = (1+y-ix)/2 + t/2*α((1+y-ix)/2)
+    Definition (17) pp 4.
     """
 function s_star(t::Real, x::Real, y::Real)
     # Recall that
@@ -177,10 +180,6 @@ end
 function N(t::Real, x::Real)
     return floor(Int, √(x/(4*π) + t/16))
 end
-
-
-# TODO: move these bounds to tests
-
 
 """  H̃(t:Real, x::Real, y::Real)
     

@@ -5,6 +5,7 @@ using Base.Test
 
 info("Testing PM15a")
 include("test_introduction.jl")
+include("test_applying_the_fundamental_solution.jl")
 include("test_elementary_estimates.jl")
 include("test_estimates_for_large_x.jl")
 info("PM15a passes tests.")

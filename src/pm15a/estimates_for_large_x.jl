@@ -1,6 +1,7 @@
 
 export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC, EC₀
 export ϵ̃, eA, eB, eC, eC0
+export ϵ̃ₜₙ, ẽA, ẽB
 
 #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
@@ -40,7 +41,10 @@ end
 function est_utility(t::Real, σ::Real, T::Real)
     T′ = T+π*t/8  # = x/2 +πt/8 assuming σ+iT = (1+i(x+iy))/2 (66) pp 22
     a = √(T′/(2*π)) # (47) pp 15
-    N₀ = floor(Int,a) # subscript 0 to distinquish from function N (48) pp 15
+    # Compare N(t,x) = floor(Int, √(x/(4*π) + t/16)) introduction.jl and (48) pp 15
+    # with N₀ = floor(Int,a)
+    # The two expressions are idential provided T = x/2 which is the case by convention.
+    N₀ = N(t,2*T)
     p = 1-2*(a-N₀) # (49) pp 15
     U = big(e)^(-im*(T′/2*log(T′/(2*π))-T′/2-π/8)) # (50) pp 15
     return T′, a, N₀, p, U
@@ -185,6 +189,9 @@ function ϵ̃(t::Real, u::Number)
     return ϵ̃(t,real(u),imag(u))
 end
 
+#= As of commit 0a0f729 (teorth/dbn_upper_bound) the pdf used s rather than s_subscript_* in (69) and (70). This appears to be a typo: s_star() is used here.
+ =#
+
 
 """ eA(t::Real, x::Real, y::Real)
 
@@ -222,9 +229,10 @@ function eB(t::Real, x::Real, y::Real)
     (1+y+im*x)/2 = 1-s⁺(x,y)'   
     =#
     s= s⁺(x,y)
+    sᵣ = real(s_star(t,1-s'))
     ans = 0.0
     for n in 1:N(t,x)
-        ans += bᵗₙ(t,n)*big(e)^(-real(s))*ϵₜₙ(t,n,1-s')
+        ans += bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*ϵₜₙ(t,n,1-s')
     end
     return ans
 end
@@ -275,4 +283,55 @@ end
 function eC0(t::Real, z::Number)
     return eC0(t,real(z),imag(z))
 end
+
+function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
+    return bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+end
+
+"""
+    Upper bound for ϵₜₙ as given in the last line of the proof of Prop 6.6 iv.
+    ϵₜₙ((1±y+ix)/2) ≤ exp((t²/32*log²(x/(4πn²))+0.313)/(T-3.33))-1
+    equivalently, ϵₜₙ((1±y+ix)/2) ≤ exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1
+    since T=x/2 by convention.
+
+    Note that x/2-6.66 rather than x-6.66 appears in the denominator 
+    """
+function ϵ̃ₜₙ(t::Real, n::Int, x::Real, y::Real)
+    return big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)) - 1
+end
+
+function ϵ̃ₜₙ(t::Real, n::Int, s::Number)
+    return  ϵ̃ₜₙ(t,n,real(s),imag(s))
+end
+ 
+
+""" 
+    Returns an upper bound to eA as given in Propositon 6.6 iv, pp 23
+    eA ≤ |γ|N^|κ|∑(nʸbᵗₙ/n^(ℜ(s)))*(exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1)
+    equivalently eA ≤ |γ|N^|κ|∑(nʸbᵗₙ/n^(ℜ(s)))*ϵ̃ₜₙ
+    """
+function ẽA(t::Real, x::Real, y::Real)
+    bound = 0.0
+    sᵣ = real(s_star(t,x,y))
+    N₀=N(t,x)
+    for n in 1:N₀
+        bound += bᵗₙ(t,n)*big(e)^(log(n)*(y-sᵣ))*ϵ̃ₜₙ(t,n,x,y) 
+    end
+    return abs(γₜ(t,x,y))*big(e)^(abs(κ(t,x,y)*log(N₀)))*bound
+end
+
+""" 
+    Returns an upper bound to eB as given in Propositon 6.6 v, pp 23
+    """
+function ẽB(t::Real, x::Real, y::Real)
+    bound = 0.0
+    s = s⁺(x,y)
+    sᵣ = real(s_star(t,1-s'))
+    N₀=N(t,x)
+    for n in 1:N₀
+        bound +=  bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*ϵ̃ₜₙ(t,n,s)
+    end
+    return bound
+end
+
 

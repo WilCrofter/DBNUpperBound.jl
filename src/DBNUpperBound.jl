@@ -16,17 +16,21 @@ export Hₜ
 
 # pm15a/introduction.jl
 export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
-export region_5, in_region_5, bound20, bound21, bound22, bound23, bound24
+export region_5, in_region_5
 export γₜ, κ, fₜ, s_star
+export N
+
 
 # pm15a/notation
 export complex_power, gaussian_identity # temporarily, anyway
 
+# pm15a/applying_the_fundamental ...
 export r₀, rₜₙ_integrand, rₜₙ_by_integration
 
-# estimates for large x
+# pm15a/estimates_for_large_x
 export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC, EC₀
 export ϵ̃, eA, eB, eC, eC0
+export ϵ̃ₜₙ, ẽA, ẽB
 
 export δ₁, F
 

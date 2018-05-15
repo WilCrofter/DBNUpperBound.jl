@@ -62,6 +62,21 @@ function test_estimates_for_large_x()
             @test abs(Htref[x]) ≤ abs(A(t,x,y)+B(t,x,y)-C(t,x,y)+EA(t,x,y)+EB(t,x,y)+EC(t,x,y))
         end
 
+        # Test bounds for ϵₜₙ, ẽA, ẽB
+        for i in 1:size(r5,1)
+            t,x,y = r5[i,1],r5[i,2],r5[i,3]
+            n = n5[i]
+            s = s⁺(x,y)
+            T = imag(s)
+            @test (t^2/8*abs(α(s)-log(n))^2+t/4+1/6)/(T-3.33) ≤ (t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)
+            T = imag(1-s') # same as imag(s) of course
+            @test (t^2/8*abs(α(1-s')-log(n))^2+t/4+1/6)/(T-3.33) ≤ (t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66)
+            @test abs(ϵₜₙ(t,n,s)) ≤ abs(ϵ̃ₜₙ(t,n,s))
+            @test abs(ϵₜₙ(t,n,1-s')) ≤ abs(ϵ̃ₜₙ(t,n,1-s'))
+            # @test eA(t,x,y) ≤ ẽA(t,x,y)
+            @test abs(eB(t,x,y)) ≤ abs(ẽB(t,x,y))
+        end
+
     end # precision
 end
 
