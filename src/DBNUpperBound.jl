@@ -3,8 +3,6 @@ module DBNUpperBound
 using QuadGK
 using SpecialFunctions
 
-# Γ = SpecialFunctions.gamma
-
 include("pm15a/PM15a.jl")
 using .PM15a
 
@@ -17,8 +15,8 @@ export Hₜ
 # pm15a/introduction.jl
 export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5
-export γₜ, κ, fₜ, s_star
-export N
+export γₜ, κ, fₜ
+export N, H̃, H̃₂
 
 
 # pm15a/notation
@@ -28,9 +26,10 @@ export complex_power, gaussian_identity # temporarily, anyway
 export r₀, rₜₙ_integrand, rₜₙ_by_integration
 
 # pm15a/estimates_for_large_x
-export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC, EC₀
-export ϵ̃, eA, eB, eC, eC0
-export ϵ̃ₜₙ, ẽA, ẽB
+export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
+#export C₀, EA, EB, EC, EC₀
+#export ϵ̃, eA, eB, eC, eC0
+#export ϵ̃ₜₙ, ẽA, ẽB
 
 export δ₁, F
 

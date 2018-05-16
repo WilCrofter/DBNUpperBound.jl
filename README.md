@@ -2,9 +2,15 @@
 
 Julia code following, i.e., having made no original contributions to, [Polymath Problem 15](http://michaelnielsen.org/polymath1/index.php?title=De_Bruijn-Newman_constant).
 
-Status: Refactored for clarity, better numerics, and better accord with the current draft, [EFFECTIVE APPROXIMATION OF HEAT FLOW EVOLUTION OF THE RIEMANN XI FUNCTION, AND AN UPPER BOUND FOR THE DE BRUIJN-NEWMAN CONSTANT](https://github.com/teorth/dbn_upper_bound/blob/master/Writeup/debruijn.pdf) (PDF). Still substantially behind [dbn_upper_bound](https://github.com/teorth/dbn_upper_bound) and still a work in progress. There is very little documentation at the moment.
+## Status:
 
-Default use of arbitrary precision arithmetic is a major difference w.r.t. earlier code. (Julia wraps the GNU Multiple Precision Arithmetic Library (GMP) and the GNU MPFR Library. [Reference](https://docs.julialang.org/en/stable/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1)). 
+Refactored for clarity, better numerics, and better accord with the current draft, [EFFECTIVE APPROXIMATION OF HEAT FLOW EVOLUTION OF THE RIEMANN XI FUNCTION, AND AN UPPER BOUND FOR THE DE BRUIJN-NEWMAN CONSTANT](https://github.com/teorth/dbn_upper_bound/blob/master/Writeup/debruijn.pdf) (PDF).
+
+Code covering sections 1 through 6 of the current draft have been written, tested, and to some extent documented. The package remains substantially behind [dbn_upper_bound](https://github.com/teorth/dbn_upper_bound) and is still a work in progress.
+
+Default use of arbitrary precision arithmetic is a major difference w.r.t. earlier code. (Julia wraps the GNU Multiple Precision Arithmetic Library (GMP) and the GNU MPFR Library. [Reference](https://docs.julialang.org/en/stable/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1)).
+
+## Installation
 
 To install this package and its dependencies:
 

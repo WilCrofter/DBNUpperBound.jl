@@ -1,7 +1,7 @@
 export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5
-export γₜ, κ, fₜ, s_star
-export N
+export γₜ, κ, fₜ
+export N, H̃, H̃₂
 
 """ s⁺(x,y)
 
@@ -100,15 +100,9 @@ end
     Equation (14) pp4
     """
 function fₜ(t::Real, x::Real, y::Real)
-    f1 = f2 = 0.0
-    for n in 1:N(t,x)
-        logb = logbᵗₙ(t, n)
-        # b/n^(s_star(t,x,y))
-        f1 += big(e)^(logb-log(n)*s_star(t,x,y))
-        # n^y*b/n^(s_star(t,x,y)'+κ(t,x,y))
-        f2 += big(e)^(logb+log(n)*(y-s_star(t,x,y)'+κ(t,x,y))) 
-    end
-    return f1+γₜ(t,x,y)*f2
+    ans = H̃(t,x,y)
+    B0 = B₀(t,x,y)
+    return ans[1]/B0, ans[2]/abs(B0)
 end
 
 function fₜ(t::Real, z::Number)
@@ -144,23 +138,6 @@ function γₜ(t::Real, z::Number)
     return γₜ(t, real(z), imag(z))
 end
 
-""" s_star(t,x,y)
-    
-    Returns s* = (1+y-ix)/2 + t/2*α((1+y-ix)/2)
-    Definition (17) pp 4.
-    """
-function s_star(t::Real, x::Real, y::Real)
-    # Recall that
-    # (1-y+im*x)/2 = s⁺(x,y)
-    # (1+y-im*x)/2 = 1-s⁺(x,y)
-    s = s⁺(x,y)
-    return 1-s + t/2*α(1-s)
-end
-
-function s_star(t::Real, z::Number)
-    return s_star(t, real(z), imag(z))
-end
-
 """ κ(t,x,y)
 
     Returns t/2*( α((1-y+ix)/2) - α((1+y+ix)/2))
@@ -181,17 +158,26 @@ function N(t::Real, x::Real)
     return floor(Int, √(x/(4*π) + t/16))
 end
 
-"""  H̃(t:Real, x::Real, y::Real)
+"""  H̃(t::Real, x::Real, y::Real)
     
-    Returns an effective approximation for Hₜ(x+iy)/B₀(x+iy) and error bound eA+eB+eC0 as per Theorem 1.3, equation (13) pp 3 of the reference.
-    """ 
+    Returns the "A+B" approximation to Hₜ and the error bound, EA+EB+EC0. 
+    """
 function H̃(t::Real, x::Real, y::Real)
-    in_region_5(t, x, y) || error("Arguments are not in region (5)")
-    return fₜ(t,x,y)+eA(t,x,y)+eB(t,x,y)+eC0(t,x,y)
+    Ã,EA = A(t,x,y)
+    B̃,EB = B(t,x,y)
+    EC0  = C(t,x,y)[3]
+    return Ã+B̃, EA+EB+EC0
 end
 
-function H̃(t::Real, z::Number)
-    return H̃(t,real(z),imag(z))
+""" H̃₂(t::Real, x::Real, y::Real)
+    
+    Returns the "A+B-C" approximation to Hₜ and the error bound, EA+EB+EC
+    """
+function H̃₂(t::Real, x::Real, y::Real)
+    Ã,EA = A(t,x,y)
+    B̃,EB = B(t,x,y)
+    C̃,EC,EC0  = C(t,x,y)
+    return Ã+B̃-C̃, EA+EB+EC
 end
+ 
 
-             

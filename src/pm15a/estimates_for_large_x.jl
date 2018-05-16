@@ -1,7 +1,8 @@
 
-export ϵₜₙ, rₜₙ, RtN, A, B, C, C₀, EA, EB, EC, EC₀
-export ϵ̃, eA, eB, eC, eC0
-export ϵ̃ₜₙ, ẽA, ẽB
+export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
+#export C₀, EA, EB, EC, EC₀
+#export ϵ̃, eA, eB, eC, eC0
+#export ϵ̃ₜₙ, ẽA, ẽB
 
 #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
@@ -27,7 +28,7 @@ end
     equivalently, ϵₜₙ((1±y+ix)/2) ≤ exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1
     since T=x/2 by convention.
 
-    Note that x/2-6.66 rather than x-6.66 appears in the denominator 
+    Note that x-6.66 (as in 6.6 v) rather than x/2-6.66 (as in 6.6 iv) appears in the denominator here. The x/2 is assumed to be a typo meant as T/2 (=x.)
     """
 function ϵ̃ₜₙ(t::Real, n::Int, σ::Real, T::Real)
     x=2*T
@@ -99,10 +100,10 @@ function A(t::Real, x::Real, y::Real)
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
     # Recall that (1-y+im*x)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
-    T′, a, N₀, p, U = est_utility(t,σ,T)
+    # T′, a, N₀, p, U = est_utility(t,σ,T)
     astar = (s+t/2*α(s))
     ans = err = 0.0
-    for n in 1:N₀
+    for n in 1:N(t,x)
         # again, note that (1-y+im*x)/2 = s⁺(x,y)
         tmp = bᵗₙ(t,n)*big(e)^(-log(n)*astar)
         ans += tmp
@@ -126,11 +127,11 @@ function B(t::Real, x::Real, y::Real)
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
     # Recall that (1-y+ix)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
-    T′, a, N₀, p, U = est_utility(t,σ,T)
+    # T′, a, N₀, p, U = est_utility(t,σ,T)
     ans = err = 0.0
     # Note that (1+y-ix)/2 = 1-s⁺(x,y)
     bstar = 1-s + t/2*α(1-s)
-    for n in 1:N₀
+    for n in 1:N(t,x)
         tmp = bᵗₙ(t,n)*big(e)^(-log(n)*bstar)
         ans += tmp
         err += abs(tmp)*ϵₜₙ(t,n,1-s')
@@ -149,7 +150,14 @@ function C(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
-    T′, a, N₀, p, U = est_utility(t,σ,T)
+    T′ = T+π*t/8  # = x/2 +πt/8 assuming σ+iT = (1+i(x+iy))/2 (66) pp 22
+    a = √(T′/(2*π)) # (47) pp 15
+    # Compare N(t,x) = floor(Int, √(x/(4*π) + t/16)) introduction.jl and (48) pp 15
+    # with N₀ = floor(Int,a)
+    # The two expressions are idential provided T = x/2 which is the case by convention.
+    N₀ = N(t,2*T)
+    p = 1-2*(a-N₀) # (49) pp 15
+    U = big(e)^(-im*(T′/2*log(T′/(2*π))-T′/2-π/8)) # (50) pp 15
     ans = 2*(-1)^N₀*big(e)^(-im*π*y/8 +t*π^2/64)*real(M₀(im*T′)*C₀(p)*U*exp(π*im/8))
     tmp = big(e)^(t*π^2/64)*abs(M₀(im*T′))
     ẽ=ϵ̃(t,s)+ϵ̃(t,1-s')
@@ -206,7 +214,7 @@ function EC(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
-    T′, a, N₀, p, U = est_utility(t,σ,T)
+    T′ = T+π*t/8  # = x/2 +πt/8 assuming σ+iT = (1+i(x+iy))/2 (66) pp 22
     # Recall (1-y+im*x)/2 = s⁺(x,y)
     # and    (1+y+im*x)/2 = 1-s⁺(x,y)'
     return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(ϵ̃(t,s)+ϵ̃(t,1-s'))
@@ -216,7 +224,7 @@ function EC₀(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
     σ, T = real(s), imag(s)
-    T′, a, N₀, p, U = est_utility(t,σ,T)
+    T′ = T+π*t/8  # = x/2 +πt/8 assuming σ+iT = (1+i(x+iy))/2 (66) pp 22
     return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(1+ϵ̃(t,s)+ϵ̃(t,1-s'))
 end
                                          
@@ -233,148 +241,6 @@ end
 
 function ϵ̃(t::Real, u::Number)
     return ϵ̃(t,real(u),imag(u))
-end
-
-#= As of commit 0a0f729 (teorth/dbn_upper_bound) the pdf used s rather than s_subscript_* in (69) and (70). This appears to be a typo: s_star() is used here.
- =#
-
-
-""" eA(t::Real, x::Real, y::Real)
-
-    eA(x+iy) := |γ|∑nʸ*bᵗₙ/n^ℜ(s+κ)*ϵₜₙ((1-y+ix)/2)
-              = |γ|∑bᵗₙ*e^((y-ℜ(s+k))log(n))*ϵₜₙ((1-y+ix)/2)
-    where s=(1-y+ix)/2
-    Definition (69) pp. 23.
-    """
-function eA(t::Real, x::Real, y::Real)
-    in_region_5(t,x,y) || error("Parameters are not in region (5)")
-    #= Recall (1-y+im*x)/2 = s⁺(x,y) =#
-    s = s⁺(x,y)
-    # Recall that κ := t/2*(α(s)-α(1-s')) TODO:
-    # rastar is the real part of astar = s+t/2*α(s) = (1-y)/2 + t/2*α((1-y+ix)/2)
-    # which appears in the definition of A
-    rastar = real(s+t/2*α(s))
-    ans = 0.0
-    skᵣ = real(s+κ(t,x,y))
-    for n in 1:N(t,x)
-        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rastar)*ϵₜₙ(t,n,s)
-    end
-    # Recall that γ = Mₜ(s)/Mₜ(1-s)
-    return abs(γₜ(t,x,y))*ans
-end
-
-function eA(t::Real, z::Number)
-    return eA(t, real(z), imag(z))
-end
-
-""" eB(t::Real, x::Real, y::Real)
-
-    eB(x+iy) := ∑nʸ*bᵗₙ/n^ℜ(s)*ϵₜₙ((1+y+ix)/2)
-              = ∑bᵗₙ*e^(-ℜ(s)log(n))*ϵₜₙ((1+y+ix)/2)
-    where s=(1-y+ix)/2
-    Definition (70) pp. 23.
-    """
-function eB(t::Real, x::Real, y::Real)
-    in_region_5(t,x,y) || error("Parameters are not in region (5)")
-    #= Recall
-    (1+y+im*x)/2 = 1-s⁺(x,y)'   
-    =#
-    s= s⁺(x,y)
-    # Recall that (1+y+im*x)/2 = 1-s⁺(x,y)'
-    # Also note that α(1-s') = α(1-s)'
-    # Hence rbstar, below is the same as the real
-    # part of bstar which appears in the def of B,
-    # and is identical to the rbstar of EB.
-    rbstar = real(1-s' + t/2*α(1-s'))
-    ans = 0.0
-    for n in 1:N(t,x)
-        ans += bᵗₙ(t,n)*big(e)^(-log(n)*rbstar)*ϵₜₙ(t,n,1-s')
-    end
-    return ans
-end
-
-function eB(t::Real, z::Number)
-    return eB(t,real(z),imag(z))
-end
-
-""" eC(t::Real, x::Real, y::Real)
-
-    eC := exp(tπ²/64)|M₀(iT′)|(ϵ̃((1-y+ix)/2)+ϵ̃((1+y+ix)/2))/|Mₜ((1+y+ix)/2)|
-    Definition (71) pp. 23.
-    """
-function eC(t::Real, x::Real, y::Real)
-    in_region_5(t,x,y) || error("Parameters are not in region (5)")
-    #= Recall
-    (1-y+im*x)/2 = s⁺(x,y)
-    (1+y+im*x)/2 = 1-s⁺(x,y)'
-    =#
-    s = s⁺(x,y)
-    T = imag(s)
-    T′ = T + π*t/8 # Def (66), pp 22
-    return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(ϵ̃(t,s) + ϵ̃(t,1-s'))/abs(Mₜ(t, 1-s'))
-end
-
-function eC(t::Real, z::Number)
-    return eC(t,real(z),imag(z))
-end
-
-
-""" eC0(t::Real, x::Real, y::Real)
-
-    eC0(x+iy) := exp(tπ²/64)*|M₀(iT′)|*(1+ϵ̃((1-y+ix)/2)+ϵ̃((1+y+ix)/2))/|Mₜ((1+y+ix)/2)|
-    Definition (72) pp. 23.
-    """
-function eC0(t::Real, x::Real, y::Real)
-    in_region_5(t,x,y) || error("Parameters are not in region (5)")
-    #= Recall
-    (1-y+im*x)/2 = s⁺(x,y)
-    (1+y+im*x)/2 = 1-s⁺(x,y)'
-    =#
-    s = s⁺(x,y)
-    T = imag(s)
-    T′ = T + π*t/8 # Def (66), pp 22
-    return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(1 + ϵ̃(t,s) + ϵ̃(t,1-s'))/abs(Mₜ(t,1-s'))
-end
-
-function eC0(t::Real, z::Number)
-    return eC0(t,real(z),imag(z))
-end
-
-function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
-    return bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
-end
-
-
- 
-
-""" 
-    Returns an upper bound to eA as given in Propositon 6.6 iv, pp 23
-    eA ≤ |γ|N^|κ|∑(nʸbᵗₙ/n^(ℜ(s)))*(exp((t²/16*log²(x/(4πn²))+0.626)/(x-6.66))-1)
-    equivalently eA ≤ |γ|N^|κ|∑(nʸbᵗₙ/n^(ℜ(s)))*ϵ̃ₜₙ
-    """
-function ẽA(t::Real, x::Real, y::Real)
-    bound = 0.0
-    s = s⁺(x,y)
-    sᵣ=astar = real(s+t/2*α(s))
-    N₀=N(t,x)
-    for n in 1:N₀
-        bound += bᵗₙ(t,n)*big(e)^(log(n)*(y-sᵣ))*ϵ̃ₜₙ(t,n,x,y) 
-    end
-    return abs(γₜ(t,x,y))*big(e)^(abs(κ(t,x,y)*log(N₀)))*bound
-end
-
-""" 
-    Returns an upper bound to eB as given in Propositon 6.6 v, pp 23
-    """
-function ẽB(t::Real, x::Real, y::Real)
-    bound = 0.0
-    s = s⁺(x,y)
-    sᵣ = real(s_star(t,1-s'))
-    N₀=N(t,x)
-    for n in 1:N₀
-        bound +=  bᵗₙ(t,n)*big(e)^(-sᵣ*log(n))*ϵ̃ₜₙ(t,n,s)
-    end
-    return bound
 end
 
 

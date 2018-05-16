@@ -1,3 +1,7 @@
+
+using DBNUpperBound
+using Base.Test
+
 """ 
     Inequality (20) pp 
     """
@@ -6,7 +10,8 @@ function bound20(t::Real, x::Real, y::Real)
 end
 
 function bound21(t::Real,x::Real,y::Real)
-    return real(s_star(t,x,y)) ≥ (1+y)/2 + t/4*log(x/(4*π)) - t*max(0.0, 1-3*y+(4*y*(1+y))/x^2)/(2*x^2)
+    sstar = (1+y-im*x)/2 + t/2*α((1+y-im*x)/2)
+    return real(sstar) ≥ (1+y)/2 + t/4*log(x/(4*π)) - t*max(0.0, 1-3*y+(4*y*(1+y))/x^2)/(2*x^2)
 end
 
 function bound22(t::Real, x::Real, y::Real)
@@ -17,30 +22,17 @@ function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t
     return bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
 end
 
-function bound23(t::Real, x::Real, y::Real)
-    bound=0.0
-    N₀ = N(t,x)
-    γₐ = abs(γₜ(t,x,y))
-    κₐ = abs(κ(t,x,y))
-    sᵣ = real(s_star(t,x,y))
+
+function def14(t::Real, x::Real, y::Real)
+    sstar = (1+y-im*x)/2 + t/2*α((1+y-im*x)/2)
+    kappa = t/2*(α((1-y+im*x)/2)-α((1+y+im*x)/2))
+    N₀ = floor(Int,√(x/(4*π)+t/16))
+    gam = Mₜ(t,(1-y+im*x)/2)/Mₜ(t,(1+y-im*x)/2)
+    ans = 0.0
     for n in 1:N₀
-        bound += (1+γₐ*N₀^κₐ*n^y)*bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
+        ans += bᵗₙ(t,n)*(big(e)^(-sstar*log(n))+gam*big(e)^((y-sstar'-kappa)*log(n)))
     end
-    return eA(t,x,y)+eB(t,x,y) ≤ bound
-end
-
-function bound23(t::Real, z::Number)
-    return bound23(t,real(z),imag(z))
-end
-
-function bound24(t::Real, x::Real, y::Real)
-    return eC0(t,x,y) ≤ (x/(4*π))^(-(1+y)/4) *
-        big(e)^(-t/16*log(x/(4*π))^2 + (1.24*(3^y+3^(-y)))/(N(t,x)-0.125) +
-               (3*abs(log(x/(4*π))+im*π/2)+10.44)/(x-8.52))
-end
-
-function bound24(t::Real, z::Number)
-    return bound24(t,real(z),imag(z))
+    return ans
 end
 
 function test_introduction()
@@ -71,15 +63,14 @@ function test_introduction()
         srand(0x000039e5fab138e8) #random seed
         r5 = region_5(50)
 
+        # test fₜ as defined in (14) pp. 4 against implementation in pm15a/introduction.jl
+        @test all([def14(r5[i,1],r5[i,2],r5[i,3]) ≈ fₜ(r5[i,1],r5[i,2],r5[i,3])[1] for i in 1:size(r5,1)])
+        
 
         @test all([in_region_5(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
         @test all([bound20(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
         @test all([bound21(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
         @test all([bound22(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
-        # TODO: as implemented, bounds 23 & 24 fail tests.
-        # Defer debugging until later in paper.
-        # @test all([bound23(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
-        # @test all([bound24(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
     end
 end
 

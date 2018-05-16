@@ -58,6 +58,9 @@ function test_estimates_for_large_x()
             B̃,EB̃ = B(t,x,y)
             EC̃₀  = C(t,x,y)[3]
             @test abs(Htref[x]) ≤ abs(Ã+B̃)+EÃ+EB̃+EC̃₀
+            h = H̃(t,x,y)
+            @test Ã+B̃ == h[1]
+            @test EÃ+EB̃+EC̃₀ == h[2]
         end
 
         
