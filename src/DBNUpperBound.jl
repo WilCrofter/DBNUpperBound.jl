@@ -18,7 +18,6 @@ export region_5, in_region_5
 export γₜ, κ, fₜ
 export N, H̃, H̃₂
 
-
 # pm15a/notation
 export complex_power, gaussian_identity # temporarily, anyway
 
@@ -30,6 +29,9 @@ export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
 #export C₀, EA, EB, EC, EC₀
 #export ϵ̃, eA, eB, eC, eC0
 #export ϵ̃ₜₙ, ẽA, ẽB
+
+# pm15a/bounding_dirichlet_series
+export Dirichlet_convolution, ✪
 
 export δ₁, F
 

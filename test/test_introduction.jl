@@ -65,7 +65,6 @@ function test_introduction()
 
         # test fₜ as defined in (14) pp. 4 against implementation in pm15a/introduction.jl
         @test all([def14(r5[i,1],r5[i,2],r5[i,3]) ≈ fₜ(r5[i,1],r5[i,2],r5[i,3])[1] for i in 1:size(r5,1)])
-        
 
         @test all([in_region_5(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
         @test all([bound20(r5[i,1],r5[i,2],r5[i,3]) for i in 1:50])
