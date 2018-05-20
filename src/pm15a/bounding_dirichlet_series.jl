@@ -1,5 +1,6 @@
 
-export Dirichlet_convolution, mollifiers
+export Dirichlet_convolution, mollifiers, αβ
+export bound77
 
 using Primes
 
@@ -26,3 +27,35 @@ function mollifiers(P::Integer, t::Real)
     end
     return λ
 end
+
+""" αβ(t::Real, x::Real, y::Real)
+
+    returns vectors of coefficients, αₙ = γ*bᵗₙ*n^(y-κ̄) and βₙ=bᵗₙ, as per expression above (76) pp. 27.
+    """
+function αβ(t::Real, x::Real, y::Real)
+    k = κ(t,x,y)
+    absγ = abs(γₜ(t,x,y))
+    return [absγ*bᵗₙ(t,n)*big(e)^(log(n)*(y-k')) for n in 1:N(t,x)], [bᵗₙ(t,n) for n in 1:N(t,x)]
+end
+
+
+
+
+""" bound77(t::Real, x::Real, y::Real)
+
+    Returns a lower bound to |fₜ(x+iy)| formally equivalent to that given by inequality (77) pp. 29
+
+    
+    """
+function bound77(t::Real, x::Real, y::Real)
+    σ = real(sstar(t,x,y))
+    k = real(κ(t,x,y))
+    absγ = abs(γₜ(t,x,y))
+    bound = 1-absγ
+    for n in 2:N(t,x)
+        bound -= bᵗₙ(t,n)*(1+absγ*big(e)^(log(n)*(y-k)))*big(e)^(-log(n)*σ)
+    end
+    return bound
+end
+    
+                          

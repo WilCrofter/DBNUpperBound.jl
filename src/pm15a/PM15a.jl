@@ -1,7 +1,6 @@
 module PM15a
 
 using DBNUpperBound
-# using DBNUpperBound.Asymptotics
 using SpecialFunctions
 include("utilities.jl")
 include("introduction.jl")

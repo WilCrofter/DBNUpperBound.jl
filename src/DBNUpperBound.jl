@@ -17,7 +17,7 @@ export Hₜ
 export r₀, rₜₙ_integrand, rₜₙ_by_integration
 
 # pm15a/introduction.jl
-export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
+export s⁺, sstar, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5
 export γₜ, κ, fₜ
 export N, H̃, H̃₂
@@ -29,7 +29,8 @@ export complex_power, gaussian_identity # temporarily, anyway
 export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
 
 # pm15a/bounding_dirichlet_series
-export Dirichlet_convolution, mollifiers
+export Dirichlet_convolution, mollifiers, s✪, αβ
+export bound77
 
 export δ₁, F
 

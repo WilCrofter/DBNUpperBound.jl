@@ -1,6 +1,8 @@
 using DBNUpperBound
 using Base.Test
-include("Ht_ref_values.jl") # Htref, a Dictionary of Hₜ reference values provided by Anonymous
+if !isdefined(:Href)
+    include("Ht_ref_values.jl") # Htref, a Dictionary of Hₜ reference values provided by Anonymous
+end
 
 function test_estimates_for_large_x()
     info("Testing estimates for large x")

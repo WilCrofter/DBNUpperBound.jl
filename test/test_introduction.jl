@@ -21,8 +21,11 @@ end
 function ebound_util(n::Int, t::Real, x::Real, y::Real; sᵣ::Real=real(s_star(t,x,y)))
     return bᵗₙ(t,n)/n^sᵣ*(big(e)^((t^2/16*log(x/(4*π*n^2))^2+0.626)/(x-6.66))-1)
 end
-
-
+""" Definition (14) pp. 4
+    
+    fₜ(x+iy) := ∑ bᵗₙ⋅n^(s✪) + γ ∑ nʸ⋅bᵗₙ/n^(s✪' + κ)
+    where ' indicates complex complement.
+"""
 function def14(t::Real, x::Real, y::Real)
     sstar = (1+y-im*x)/2 + t/2*α((1+y-im*x)/2)
     kappa = t/2*(α((1-y+im*x)/2)-α((1+y+im*x)/2))

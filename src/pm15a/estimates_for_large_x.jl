@@ -88,32 +88,45 @@ function C₀(p::Real)
     return p ≈ 0.5 || p ≈ -0.5 ? (1-im)/4 :(exp(π*im*(p^2/2 + 3/8)) - im*√(2)*cos(π*p/2))/2*cos(π*p)
 end
 
+""" Aterm(t::Real, n::Int, x::Real, y::Real; s=s⁺(x,y), astar=s+t/2*α(s))
+
+    A utility which returns a term bᵗₙ/n^(s+t⋅α(s)/2), useful for computing A and related quantities. Recall that (1-y+im*x)/2 = s⁺(x,y).
+    """
+function Aterm(t::Real, n::Int, x::Real, y::Real; s::Number=s⁺(x,y), astar::Number=s+t/2*α(s))
+    return bᵗₙ(t,n)*big(e)^(-log(n)*astar)
+end
+
 """ A(t::Real, x::Real, y::Real)
 
     Returns A and error estimate EA for A
     where A(x+iy) = Mₜ((1-y+ix)/2)*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))
-          EA(x+iy) = |Mₜ((1-y+ix)/2)*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))|*ϵₜₙ(t,x,y)
+          EA(x+iy) = |Mₜ((1-y+ix)/2)|*∑bᵗₙ/n^((1-y+ix)/2 +t/2*α((1-y+ix)/2))|*ϵₜₙ(t,x,y)
     Corollary 6.4, pp 22. 
     """
 function A(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
-    σ, T = real(s), imag(s)
-    # Recall that (1-y+im*x)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
-    # T′, a, N₀, p, U = est_utility(t,σ,T)
     astar = (s+t/2*α(s))
     ans = err = 0.0
+    #terms = Aterms(t,x,y)
     for n in 1:N(t,x)
-        # again, note that (1-y+im*x)/2 = s⁺(x,y)
-        tmp = bᵗₙ(t,n)*big(e)^(-log(n)*astar)
-        ans += tmp
-        err += abs(tmp)*ϵₜₙ(t,n,s)
+        term = Aterm(t,n,x,y,s=s,astar=astar)
+        ans += term
+        err += abs(term)*ϵₜₙ(t,n,s)
     end
     return Mₜ(t,s)*ans, abs(Mₜ(t,s))*err
 end
 
 function A(t::Real, z::Number)
     return A(t, real(z), imag(z))
+end
+
+""" Bterm(t::Real, n::Int, x::Real, y::Real; s=s⁺(x,y), bstar=1-s+t/2*α(1-s))
+
+    A utility which returns a term bᵗₙ/n^(1-s+t⋅α(1-s)/2), useful for computing B and related quantities. Recall that (1+y-im*x)/2 = 1-s⁺(x,y).
+    """
+function Bterm(t::Real, n::Int, x::Real, y::Real; s=s⁺(x,y), bstar=1-s+t/2*α(1-s))
+    return bᵗₙ(t,n)*big(e)^(-log(n)*bstar)
 end
 
 """ Returns B and error estimate EB for B
@@ -125,16 +138,13 @@ end
 function B(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
-    σ, T = real(s), imag(s)
-    # Recall that (1-y+ix)/2 = s⁺(x,y) hence T=x/2 and T′= x/2+π*t/8 as required
-    # T′, a, N₀, p, U = est_utility(t,σ,T)
     ans = err = 0.0
-    # Note that (1+y-ix)/2 = 1-s⁺(x,y)
+    # Note that (1+y-ix)/2 = 1-s⁺(x,y) and (1+y+ix)/2 = 1-s⁺(x,y)' where ' indicates conjugation.
     bstar = 1-s + t/2*α(1-s)
     for n in 1:N(t,x)
-        tmp = bᵗₙ(t,n)*big(e)^(-log(n)*bstar)
-        ans += tmp
-        err += abs(tmp)*ϵₜₙ(t,n,1-s')
+        term = Bterm(t,n,x,y,s=s,bstar=bstar)
+        ans += term
+        err += abs(term)*ϵₜₙ(t,n,1-s')
     end
     return Mₜ(t,1-s)*ans, abs(Mₜ(t,1-s))*err
 end

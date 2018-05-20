@@ -1,4 +1,4 @@
-export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
+export s⁺, sstar, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5
 export γₜ, κ, fₜ
 export N, H̃, H̃₂
@@ -18,6 +18,18 @@ s⁺(x::Real, y::Real) = (1-y+im*x)/2
 
 s⁺(z::Number) = s⁺(real(z),imag(z))
 
+""" sstar(t::Real, x::Real, y::Real)
+
+    Return s* as defined in (17) pp. 4
+    """
+function sstar(t::Real,x::Real,y::Real)
+    s = s⁺(x,y)
+    return s + t/2*α(s)
+end
+
+function sstar(t::Real, z::Number)
+    return sstar(t, real(z),imag(z))
+end
 
 """
 
@@ -68,7 +80,7 @@ end
 
 """ B₀(t,x,y)
 
-    Returns Mₜ(t,(1+y-im*x)/2) = Mₜ(t,1-s⁺(x,y)).
+    Returns Mₜ(t,(1+y-im*x)/2) = Mₜ(t,1-s⁺(x,y)) as in Def (11), pp. 3 
     """
 function B₀(t::Real, x::Real, y::Real)
     # Recall that (1+y-im*x)/2 = 1-s⁺(x,y).
@@ -96,8 +108,9 @@ function in_region_5(t::Real, z::Number)
     return in_region_5(t, real(z), imag(z))
 end
 
-"""
-    Equation (14) pp4
+""" fₜ(t::Real, x::Real, y::Real)
+
+    Returns fₜ, computed as follows. We have fₜ = A/B₀ + B/B₀ by (14) pp. 4, the definitions of A and B in Cor 6.4 pp. 22, the definition of B₀ in (11) pp. 3, and the definition of γ in (16) pp. 4. 
     """
 function fₜ(t::Real, x::Real, y::Real)
     ans = H̃(t,x,y)
