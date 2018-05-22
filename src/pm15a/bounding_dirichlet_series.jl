@@ -1,5 +1,5 @@
 
-export Dirichlet_convolution, mollifiers, αβ
+export Dirichlet_convolution, mollifiers, αterm
 export bound77
 
 using Primes
@@ -28,32 +28,22 @@ function mollifiers(P::Integer, t::Real)
     return λ
 end
 
-""" αβ(t::Real, x::Real, y::Real)
-
-    returns vectors of coefficients, αₙ = γ*bᵗₙ*n^(y-κ̄) and βₙ=bᵗₙ, as per expression above (76) pp. 27.
-    """
-function αβ(t::Real, x::Real, y::Real)
-    k = κ(t,x,y)
-    absγ = abs(γₜ(t,x,y))
-    return [absγ*bᵗₙ(t,n)*big(e)^(log(n)*(y-k')) for n in 1:N(t,x)], [bᵗₙ(t,n) for n in 1:N(t,x)]
-end
-
-
-
 
 """ bound77(t::Real, x::Real, y::Real)
 
-    Returns a lower bound to |fₜ(x+iy)| formally equivalent to that given by inequality (77) pp. 29
-
-    
+    Returns a lower bound to |fₜ(x+iy)| formally equivalent to that given by inequality (77) pp. 29.
+    Inequality (77) is |fₜ(x+iy)| ≥ 1 - |γ| - ∑₂ bᵗₙ(1+|γ|n^(y-ℜ(κ)))/n^σ
+    The summation terms are formally equivalent to the absolute values of terms which define fₜ,
+    bᵗₙ/n^(1-s+tα(1-s))/2) and γ⋅bᵗₙ/(s+tα(s))/2).
     """
 function bound77(t::Real, x::Real, y::Real)
-    σ = real(sstar(t,x,y))
-    k = real(κ(t,x,y))
     absγ = abs(γₜ(t,x,y))
+    s=s⁺(x,y)
+    bstar=1-s+t/2*α(1-s)
+    astar=s+t/2*α(s)
     bound = 1-absγ
     for n in 2:N(t,x)
-        bound -= bᵗₙ(t,n)*(1+absγ*big(e)^(log(n)*(y-k)))*big(e)^(-log(n)*σ)
+        bound -= abs(Bterm(t,n,x,y,s=s,bstar=bstar))+abs(Aterm(t,n,x,y,s=s,astar=astar))
     end
     return bound
 end

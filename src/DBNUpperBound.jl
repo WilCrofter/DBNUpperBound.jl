@@ -27,9 +27,10 @@ export complex_power, gaussian_identity # temporarily, anyway
 
 # pm15a/estimates_for_large_x
 export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
+export Aterm, Bterm
 
 # pm15a/bounding_dirichlet_series
-export Dirichlet_convolution, mollifiers, s✪, αβ
+export Dirichlet_convolution, mollifiers, s✪, αterm
 export bound77
 
 export δ₁, F

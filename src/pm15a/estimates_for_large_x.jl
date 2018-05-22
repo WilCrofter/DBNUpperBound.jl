@@ -1,5 +1,6 @@
 
 export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
+export Aterm, Bterm
 #export C₀, EA, EB, EC, EC₀
 #export ϵ̃, eA, eB, eC, eC0
 #export ϵ̃ₜₙ, ẽA, ẽB
@@ -95,6 +96,27 @@ end
 function Aterm(t::Real, n::Int, x::Real, y::Real; s::Number=s⁺(x,y), astar::Number=s+t/2*α(s))
     return bᵗₙ(t,n)*big(e)^(-log(n)*astar)
 end
+
+""" αterm(t::Real, n::Int, x::Real, y::Real)
+
+    Returns  αₙ/|γ| = bᵗₙ*n^(y-κ̄) as per expression above (76) pp. 27
+    and a term of magnitude 1, such that the product of returned values
+    formally equals bᵗₙ/n^(s+t/2*α(s)).
+    
+    Let a⋆ = s+t⋅α(s)/2 and b⋆=1-s+t⋅α(1-s)/2.
+    We have formally that A = γ∑bᵗₙ/n^a⋆ = γ∑bᵗₙn^(b⋆-a⋆)/n^b⋆.
+    Also formally, b⋆-a⋆ = 1-2s+t(α(1-s)-α(s))/2 = y-κ̄+ix+t⋅(α(s̄)-α(s))/2
+    where by (18) pp 4, κ := t⋅(α(s)-α(1-s̄)) hence -κ̄ = t⋅(α(1-s)-α(s̄))/2.
+    Thus we have
+        bᵗₙ/n^a⋆ = {bᵗₙ⋅n^(y-κ̄)*n^(ix+(α(s̄)-α(s)))}/n^b⋆ = {bᵗₙ⋅n^(y-κ̄)*n^(i(x+ℑ(α(s̄)))}/n^b⋆
+    where |n^(ix+(α(s̄)-α(s)))| = 1 since the exponent is purely imaginary.
+    """
+function αterm(t::Real,n::Int, x::Real, y::Real)
+    k = κ(t,x,y)
+    s = s⁺(x,y)
+    return bᵗₙ(t,n)*big(e)^(log(n)*(y-k')), big(e)^(log(n)*(im*+t*imag(α(s'))))
+end
+
 
 """ A(t::Real, x::Real, y::Real)
 
