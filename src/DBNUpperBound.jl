@@ -31,7 +31,7 @@ export Aterm, Bterm
 
 # pm15a/bounding_dirichlet_series
 export Dirichlet_convolution, mollifiers, s✪, αterm
-export bound77
+export bound77, bound78
 
 export δ₁, F
 
