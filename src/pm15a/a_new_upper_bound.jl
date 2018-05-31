@@ -1,4 +1,4 @@
-export δ₁, δ₁_ub, bound23, bound23a, util_23b, bound23b, bound85
+export δ₁, δ₁_ub, bound23, bound23a, util_23b, bound23b, bound85, boundsδfₜ
 
 """ δ₁_ub(t₀::Real, x₀::Real)
 
@@ -96,3 +96,37 @@ function bound85(t::Real, x₀::Real, y₀::Real, N₀::Int)
     return big(e)^(-(1+y₀)/4*l4 - t/16*l4^2 +(3*abs(l4+im*π/2)+3.58)/(x₀-8.52)) * 
         (1+1.24*(3^y₀+3^(-y₀))/(N₀-1.25)+6.72/(x₀-6.66))
 end
+
+""" boundsδfₜ(t::Real, x::Real, y::Real)
+
+    Returns (as a 2-tuple) upper bounds for |∂fₜ/∂x|=|∂fₜ/∂y| and |∂fₜ/∂t| as per Lemma 8.2 pp. 33.
+    """
+function boundsδfₜ(t::Real, x::Real, y::Real)
+    in_region_5(t,x,y) || error("t, x, and y are not in region (5)")
+    dxy1=dxy2=dt1=dt2=0
+    s = s⁺(x,y)
+    star = real(1-s + t/2*α(1-s))
+    N₀=N(t,x)
+    den1=x-6
+    den4=4*(x-6)
+    logx4π = log(x/(4*π))
+    c1=(1/2 + t/den4)
+    c2=(log(abs(1+y+im*x)/(4*π)) + π + 3/x)*c1
+    c3=1/4*(π/2+8/den1)*(logx4π+8/den1)
+    c4=π/8+2/den1
+    μ = abs(γₜ(t,x,y))*big(e)^(abs(κ(t,x,y))*log(N₀))
+    for n in 1:N₀
+        logn = log(n)
+        μ1 = bᵗₙ(t,n)*big(e)^(-star*logn)
+        μ2 = μ1*big(e)^(y*logn)
+        μ3 = logn*(1/4*(logx4π-logn)+c4)
+        dxy1 += μ1*logn*c1
+        dxy2 += μ2*(t*logn/den4 + c2)
+        dt1 += μ1*μ3
+        dt2 += μ2*(μ3+c3)
+    end
+    return dxy1+μ*dxy2, dt1+μ*dt2
+end
+        
+        
+    
