@@ -1,9 +1,7 @@
 
-export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C
+export ϵₜₙ, ϵ̃ₜₙ, ϵ̃, rₜₙ, RtN, A, B, C, EA, EB, EC, EC₀
+export eA, eB, eC, eC₀
 export Aterm, Bterm
-#export C₀, EA, EB, EC, EC₀
-#export ϵ̃, eA, eB, eC, eC0
-#export ϵ̃ₜₙ, ẽA, ẽB
 
 #= Recall
     (1-y+im*x)/2 = s⁺(x,y)
@@ -199,6 +197,12 @@ function EA(t::Real,x::Real,y::Real)
     return abs(Mₜ(t,s))*ans
 end
 
+""" eA(t::Real,x::Real,y::Real)
+
+    Returns EA/|B₀|
+    """
+eA(t::Real,x::Real,y::Real) = EA(t,x,y)/abs(B₀(t,x,y))
+
 """ EB(t::Real,x::Real,y::Real)
 
     EB(x+iy) :=  |Mₜ((1+y+ix)/2)|*∑bᵗₙ/n^((1+y)/2 +t/2*ℜ(α((1+y+ix)/2)))*ϵₜₙ((1+y+ix)/2)
@@ -222,6 +226,12 @@ function EB(t::Real, x::Real, y::Real)
     return abs(Mₜ(t,1-s'))*ans
 end
 
+""" eB(t::Real,x::Real,y::Real)
+
+    Returns EB/|B₀|
+    """
+eB(t::Real,x::Real,y::Real) = EB(t,x,y)/abs(B₀(t,x,y))
+
 function EC(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
@@ -232,6 +242,12 @@ function EC(t::Real, x::Real, y::Real)
     return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(ϵ̃(t,s)+ϵ̃(t,1-s'))
 end
 
+""" eC(t::Real,x::Real,y::Real)
+
+    Returns EC/|B₀|
+    """
+eC(t::Real,x::Real,y::Real) = EC(t,x,y)/abs(B₀(t,x,y))
+
 function EC₀(t::Real, x::Real, y::Real)
     in_region_5(t,x,y) || error("Parameters are not in region (5)")
     s = s⁺(x,y)
@@ -239,6 +255,12 @@ function EC₀(t::Real, x::Real, y::Real)
     T′ = T+π*t/8  # = x/2 +πt/8 assuming σ+iT = (1+i(x+iy))/2 (66) pp 22
     return big(e)^(t*π^2/64)*abs(M₀(im*T′))*(1+ϵ̃(t,s)+ϵ̃(t,1-s'))
 end
+
+""" eC₀(t::Real,x::Real,y::Real)
+
+    Returns EC₀/|B₀|
+    """
+eC₀(t::Real,x::Real,y::Real) = EC₀(t,x,y)/abs(B₀(t,x,y))
                                          
         
 """ ϵ̃(t::Real, σ::Real, T::Real)

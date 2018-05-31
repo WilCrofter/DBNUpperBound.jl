@@ -1,4 +1,4 @@
-export s⁺, sstar, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
+export s⁺, M₀, logM₀, logM₀′, α, α′, Mₜ, B₀, bᵗₙ, logbᵗₙ
 export region_5, in_region_5
 export γₜ, κ, fₜ
 export N, H̃, H̃₂
@@ -17,19 +17,6 @@ export N, H̃, H̃₂
 s⁺(x::Real, y::Real) = (1-y+im*x)/2
 
 s⁺(z::Number) = s⁺(real(z),imag(z))
-
-""" sstar(t::Real, x::Real, y::Real)
-
-    Return s* as defined in (17) pp. 4
-    """
-function sstar(t::Real,x::Real,y::Real)
-    s = s⁺(x,y)
-    return s + t/2*α(s)
-end
-
-function sstar(t::Real, z::Number)
-    return sstar(t, real(z),imag(z))
-end
 
 """
 
