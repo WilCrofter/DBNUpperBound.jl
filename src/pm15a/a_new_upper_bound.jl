@@ -1,3 +1,4 @@
+
 export δ₁, δ₁_ub, bound23, bound23a, util_23b, bound23b, bound85, boundsδfₜ
 
 """ δ₁_ub(t₀::Real, x₀::Real)
@@ -127,6 +128,4 @@ function boundsδfₜ(t::Real, x::Real, y::Real)
     end
     return dxy1+μ*dxy2, dt1+μ*dt2
 end
-        
-        
-    
+
