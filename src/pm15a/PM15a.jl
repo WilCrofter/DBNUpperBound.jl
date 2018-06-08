@@ -17,6 +17,7 @@ include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 include("bounding_dirichlet_series.jl")
 include("a_new_upper_bound.jl")
+include("estimating_sums.jl")
 
 
 export δ₁, F

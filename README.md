@@ -18,7 +18,7 @@ To remain current:
 julia> Pkg.update("DBNUpperBound")
 ```
 
-In Julia 0.6, `Base.runtests()` seems to fail under certain circumstances. If so, the following alternative should work:
+In Julia 0.6+, `Base.runtests()` seems to fail under certain circumstances. If so, the following alternative should work:
 
 ```
 julia> cd(Pkg.dir("DBNUpperBound"))
