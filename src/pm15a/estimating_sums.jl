@@ -19,10 +19,10 @@ A parameter, T, the length of a partial Taylor series, is required in addition t
     """
 function Nᵢ(N::Integer, N₀::Integer, H::Integer)
     0 < N₀ < N || error("We must have 0 < Nᵢ < N")
-    H%2 == 0 || error("H should be even.")
-    H2 = round(typeof(N),H/2)
-    N₁ = N₀+1+H2
-    return (N₀+1+H2):(H+1):(N₀+1+(H+1)*ceil(typeof(N),(N-N₀)/(H+1)))
+    H2 = ceil(typeof(H),H/2)
+    N₁ = N₀+H2+1
+    H′=2*H2+1
+    return N₁:H′:(N₀+H′*ceil(typeof(N),(N-N₀)/H′))
 end
 
 """ Aᵢ(ζ::Real, w::Real, Nᵢ::Integer)
@@ -68,4 +68,44 @@ function Ebound(z₀::Number, ζ::Real, w::Real, N::Integer, N₀::Integer, H::I
     d = δ(ζ,w,N,N₀,H)
     # Note, using e^(-logΓ(T+1+1)) for 1/(T+1)!
     return bige^(d+(T+1)*log(T)-lgamma(T+2))*isum
+end
+
+"""
+
+    Return σᵢⱼ(ζ,w) := ∑ Bᵢ(ζ,w)^(j₁)⋅w^(j₂)/(j₁!⋅j₂!)
+    where summation is over j₁≥0, j₂≥0 such that j₁+2j₂ = j, j₁+j₂ ≤ T
+    """
+function σᵢⱼ(ζ::Real, w::Real, Nᵢ′::Integer, j::Integer, T::Integer)
+    logBᵢ=log(Bᵢ(ζ,w,Nᵢ′))
+    logw =log(w)
+    ans=big(0.0)
+    bige=big(e)
+    # j₁=j-2j₂ and j₁+j₂ ≤ T imply j₂≥(j-T)₊
+    # j₁=j-2j₂ implies j₂≤j/2. Thus,
+    for j₂ in max(j-T,0):1:floor(typeof(j),j/2)
+        j₁=j-2*j₂
+        ans += bige^(j₁*logBᵢ+j₂*logw-lgamma(j₁+1)-lgamma(j₂+1))
+    end
+    return ans
+end
+
+"""
+    Returns εᵢₕ := log(1 + h/N_i)
+    """
+function εᵢₕ(Nᵢ′::Integer, h::Integer)
+    return log(1.0 + h/Nᵢ′)
+end
+
+""" 
+
+    βᵢⱼₕ := ∑ₕ (Nᵢ + h)^(-z₀)⋅(εᵢₕ)ʲ where h ranges between -H/2 and H/2
+    """
+function βᵢⱼₕ(z₀::Number, Nᵢ′::Integer, H::Integer)
+    ans = big(0)
+    bige=big(e)
+    H2 = ceil(typeof(H),H/2)
+    for h in -H2:1:(H-H2)
+        ans += bige^(-z₀*log(Nᵢ′+h)+j*log(εᵢⱼ(Nᵢ′+h)))
+    end
+    return ans
 end
