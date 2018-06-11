@@ -58,25 +58,26 @@ function δ(ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer)
     return abs(ζ)+2*abs(w)*log(N)*leps+abs(w)*leps^2
 end
 
-""" Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer)
+""" Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer; 
+           centers::StepRange{Int,Int}=NᵢRange(N,N₀,H))
 
-    Return the right hand side of the inequality E ≤ δ^(T+1)/(T+1)! e^δ ∑ᵢe^(ℜ(Aᵢ(ζ,w))∑ₕ(Nᵢ+h)^(-ℜ(z₀))
+    Return the right hand side of the inequality E ≤ δ^(T+1)/(T+1)! e^δ ∑ᵢe^(ℜ(Aᵢ(ζ,w))∑ₕ(Nᵢ+h)^(-ℜ(z₀)) where the summation over i is determined by the optional keyword argument, centers, which can be used, for instance, to compute the contribution of a subset of intervals. E.g., setting centers = NᵢRange(N,N₀,H)[4:4] will compute the contribution of the 4th interval, centers = NᵢRange(N,N₀,H)[4:6] will compute summed contributions of intervals 4, 5 and 6.
     """
-function Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer)
-    Nᵢs = NᵢRange(N,N₀,H) 
+function Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer;
+                centers::StepRange{Int,Int}=NᵢRange(N,N₀,H))
+    hidx=hRange(H)
     isum = big(0.0)
     bige = big(e)
-    hidx = hRange(H)
-    for Nᵢ in Nᵢs
+    for Nᵢ in centers
         hsum = big(0.0)
         for h in hidx
             hsum += bige^(-real(z₀)*log(Nᵢ+h))
         end
         isum += bige^(real(Aᵢ(ζ,w,Nᵢ)))*hsum
     end
-    d = δ(ζ,w,N,N₀,H)
+    d = δ(ζ,w,N,N₀,length(hidx))
     # Note, using e^(-logΓ(T+1+1)) for 1/(T+1)!
-    return bige^(d+(T+1)*log(T)-lgamma(T+2))*isum
+    return bige^(d+(T+1)*log(d)-lgamma(T+2))*isum
 end
 
 """ σᵢⱼ(ζ::Number, w::Number, Nᵢ::Integer, j::Integer, T::Integer)
@@ -118,26 +119,40 @@ function βᵢⱼₕ(z₀::Number, Nᵢ::Integer, H::Integer)
     return ans
 end
 
+# TODO: compute increments/errors and initial summation seperately
 
-""" FN(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer)
-    
-    Returns a partial sum FN₀(z₀+ζ, w), an estimated tail, ∑ᵢ ∑ⱼβᵢⱼₕ⋅σᵢⱼ(ζ,w), and an error bound, O≤(E), for a sum of the form F(N,z,w) = ∑ᴺ n^(-z+w⋅log(n)) where N>N₀, z=z₀+ζ and ζ and w are O(1). Thus
+""" FN(z₀::Number, ζ::Number, w::Number, N₀::Integer)
 
-    FN(z₀+ζ, w) = FN₀(z₀+ζ, w) + ∑ᵢ ∑ⱼβᵢⱼₕ⋅σᵢⱼ(ζ,w) + O≤(E)
-
-where i varies from 1 to ≈(N-N₀)/H, and j varies from 0 to 2T.
-
-    Following the procedure given in http://michaelnielsen.org/polymath1/index.php?title=Estimating_a_sum, specifically the subsection "Estimating many sums," the sum is estimated in terms of an exact initial sum, F(N₀,z,w), N₀<N, and estimated partial sums over intervals of length ≈H thereafter. A parameter, T, the length of a truncated Taylor series for eᵃ, is required in addition to parameters already mentioned.
+    Returns the exact sum  F(N₀,z₀+ζ,w) = ∑ n^(-z₀-ζ+w⋅log(n)) where summation is from 1 to N₀.
     """
-function FN(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer)
+function FN(z₀::Number, ζ::Number, w::Number, N₀::Integer)
     head = big(0.0)
-    bige = big(e)
-    z=z₀+ζ
+    z = z₀+ζ
     for n in 1:N₀
         logn = log(n)
         head += bige^(-z*logn+w*logn^2)
     end
-    centers = NᵢRange(N,N₀,H) # interval centers
+    return head
+end
+
+""" FN_tail(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer;
+            centers = NᵢRange(N,N₀,H))
+
+    Following the procedure given in http://michaelnielsen.org/polymath1/index.php?title=Estimating_a_sum, specifically the subsection "Estimating many sums," a sum F(N,z₀+ζ,w)=∑ n^(-z₀-ζ+w⋅log(n)) is estimated in terms of an exact initial sum, F(N₀,z,w), N₀<N, and estimated partial sums over intervals of length ≈H thereafter. Thus,
+
+      FN(z₀+ζ, w) = FN₀(z₀+ζ, w) + ∑ᵢ ∑ⱼβᵢⱼₕ⋅σᵢⱼ(ζ,w) + O≤(E)
+
+where i varies over intervals of length ≈H, j varies from 0 to 2T, and βᵢⱼₕ and σᵢⱼ are approximations. 
+
+    This function returns an estimate of ∑ n^(-z₀-ζ+w⋅log(n)) and an associated error bound, where summation is over a range of intervals of length ≈H between N₀ and N. The summation may be over the entire range or a subset thereof, as determined by the keyword argument, centers, whose default is the entire range. It is assumed that N>N₀, z=z₀+ζ and ζ and w are O(1). Argument T is the length of a truncated Taylor series for eᵃ. 
+    
+    The estimated sum has the form, ∑ᵢ ∑ⱼβᵢⱼₕ⋅σᵢⱼ(ζ,w) (see functions βᵢⱼₕ, σᵢⱼ) where j varies from 0 to 2T and i varies over intervals determined by the optional keyword argument, centers. Thus
+    """
+function FN_tail(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer;
+            centers = NᵢRange(N,N₀,H))
+    head = big(0.0)
+    bige = big(e)
+    z=z₀+ζ
     tail = big(0.0)
     for Nᵢ in centers
         jsum = big(0.0)
@@ -146,7 +161,7 @@ function FN(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::I
         end
         tail+=jsum
     end
-    return head, tail, Ebound(z₀, ζ, w, N, N₀, H)
+    return head, tail, Ebound(z₀, ζ, w, N, N₀, H; centers=centers)
 end
 
 
