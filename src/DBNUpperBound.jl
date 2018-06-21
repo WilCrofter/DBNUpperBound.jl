@@ -37,8 +37,8 @@ export bound77, bound78
 # pm15a/a_new_upper_bound.jl
 export δ₁, δ₁_ub, bound23, bound23a, util_23b, bound23b, bound85, boundsδfₜ
 
-export NᵢRange
-
+# pm15a/estimating_sums.jl
+export NᵢRange, FN, FN_tail, EBound
 
     
 end # module

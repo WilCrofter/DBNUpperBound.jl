@@ -1,5 +1,5 @@
 
-export NᵢRange
+export NᵢRange, FN, FN_tail, EBound
 
 using SpecialFunctions
 
@@ -58,12 +58,12 @@ function δ(ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer)
     return abs(ζ)+2*abs(w)*log(N)*leps+abs(w)*leps^2
 end
 
-""" Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer; 
+""" Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer; 
            centers::StepRange{Int,Int}=NᵢRange(N,N₀,H))
 
     Return the right hand side of the inequality E ≤ δ^(T+1)/(T+1)! e^δ ∑ᵢe^(ℜ(Aᵢ(ζ,w))∑ₕ(Nᵢ+h)^(-ℜ(z₀)) where the summation over i is determined by the optional keyword argument, centers, which can be used, for instance, to compute the contribution of a subset of intervals. E.g., setting centers = NᵢRange(N,N₀,H)[4:4] will compute the contribution of the 4th interval, centers = NᵢRange(N,N₀,H)[4:6] will compute summed contributions of intervals 4, 5 and 6.
     """
-function Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer;
+function Ebound(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer;
                 centers::StepRange{Int,Int}=NᵢRange(N,N₀,H))
     hidx=hRange(H)
     isum = big(0.0)
@@ -100,26 +100,24 @@ function σᵢⱼ(ζ::Number, w::Number, Nᵢ::Integer, j::Integer, T::Integer)
 end
 
 """ εᵢₕ(Nᵢ::Integer, h::Integer)
-    Returns εᵢₕ := log(1 + h/N_i)
+    Returns εᵢₕ := log(1 + h/Nᵢ)
     """
 function εᵢₕ(Nᵢ::Integer, h::Integer)
-    return log(1.0 + h/Nᵢ)
+    return log(1.0 + big(h/Nᵢ))
 end
 
-""" βᵢⱼₕ(z₀::Number, Nᵢ::Integer, H::Integer)
+""" βᵢⱼₕ(z₀::Number, Nᵢ::Integer, j::Integer, H::Integer)
 
     βᵢⱼₕ := ∑ₕ (Nᵢ + h)^(-z₀)⋅(εᵢₕ)ʲ where h ranges between -H/2 and H/2
     """
-function βᵢⱼₕ(z₀::Number, Nᵢ::Integer, H::Integer)
+function βᵢⱼₕ(z₀::Number, Nᵢ::Integer, j::Integer, H::Integer)
     ans = big(0)
     bige=big(e)
     for h in hRange(H)
-        ans += bige^(-z₀*log(Nᵢ+h)+j*log(εᵢⱼ(Nᵢ+h)))
+        ans += bige^(-z₀*log(Nᵢ+h))*εᵢₕ(Nᵢ,h)^j
     end
     return ans
 end
-
-# TODO: compute increments/errors and initial summation seperately
 
 """ FN(z₀::Number, ζ::Number, w::Number, N₀::Integer)
 
@@ -128,6 +126,7 @@ end
 function FN(z₀::Number, ζ::Number, w::Number, N₀::Integer)
     head = big(0.0)
     z = z₀+ζ
+    bige = big(e)
     for n in 1:N₀
         logn = log(n)
         head += bige^(-z*logn+w*logn^2)
@@ -150,18 +149,17 @@ where i varies over intervals of length ≈H, j varies from 0 to 2T, and βᵢ�
     """
 function FN_tail(z₀::Number, ζ::Number, w::Number, N::Integer, N₀::Integer, H::Integer, T::Integer;
             centers = NᵢRange(N,N₀,H))
-    head = big(0.0)
     bige = big(e)
     z=z₀+ζ
     tail = big(0.0)
     for Nᵢ in centers
         jsum = big(0.0)
         for j in 0:(2*T)
-            jsum += βᵢⱼₕ(z₀,Nᵢ,H)*σᵢⱼ(ζ, w, Nᵢ, j, T)
+            jsum += βᵢⱼₕ(z₀,Nᵢ,j,H)*σᵢⱼ(ζ, w, Nᵢ, j, T)
         end
         tail+=jsum
     end
-    return head, tail, Ebound(z₀, ζ, w, N, N₀, H; centers=centers)
+    return tail, Ebound(z₀, ζ, w, N, N₀, H, T; centers=centers)
 end
 
 
