@@ -1,6 +1,7 @@
 
-export NᵢRange, FN, FN_tail, EBound
+export NᵢRange, FN, FN_tail, EBound, hRange
 
+using DBNUpperBound
 using SpecialFunctions
 
 #=

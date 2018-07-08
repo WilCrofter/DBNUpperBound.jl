@@ -2,7 +2,7 @@
     
     A submodule based on a draft version of "EFFECTIVE APPROXIMATION OF HEAT FLOW EVOLUTION OF THE RIEMANN XI FUNCTION, AND AN UPPER BOUND FOR THE DEBRUIJN-NEWMAN CONSTANT" by D.H.J. POLYMATH.
 
-    The draft version, referred to as "the reference" in PM15a docs, is that of commit 0a0f729 of the github.com/torth/dbn_upper_bound. The original may be found at url https://github.com/teorth/dbn_upper_bound/blob/0a0f72933da63a9589c42e3d404f4fc5b88060a7/Writeup/debruijn.pdf. There is also a copy in this module. (The PDF uses git Large File Storage, though that should be transparent to forks and clones.)
+    The draft version, referred to as "the reference" in PM15a docs, is that of commit 0a0f729 of github.com/torth/dbn_upper_bound. The original may be found at url https://github.com/teorth/dbn_upper_bound/blob/0a0f72933da63a9589c42e3d404f4fc5b88060a7/Writeup/debruijn.pdf. There is also a copy in this module. (The PDF uses git Large File Storage, though that should be transparent to forks and clones.)
     """
 module PM15a
 
@@ -17,7 +17,6 @@ include("elementary_estimates.jl")
 include("estimates_for_large_x.jl")
 include("bounding_dirichlet_series.jl")
 include("a_new_upper_bound.jl")
-include("estimating_sums.jl")
 
 
 export δ₁, F

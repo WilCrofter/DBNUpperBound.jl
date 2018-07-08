@@ -6,6 +6,8 @@ using Primes
 
 include("pm15a/PM15a.jl")
 using .PM15a
+include("pm15b/PM15b.jl")
+using .PM15b
 
 # pm15a/utilities.jl
 export ζ, ξ
@@ -37,8 +39,8 @@ export bound77, bound78
 # pm15a/a_new_upper_bound.jl
 export δ₁, δ₁_ub, bound23, bound23a, util_23b, bound23b, bound85, boundsδfₜ
 
-# pm15a/estimating_sums.jl
-export NᵢRange, FN, FN_tail, EBound
+# pm15b/estimating_sums.jl
+export NᵢRange, FN, FN_tail, EBound, hRange
 
     
 end # module
