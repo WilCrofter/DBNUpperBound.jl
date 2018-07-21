@@ -5,7 +5,7 @@ using DBNUpperBound
 using SpecialFunctions
 
 #=
-The following is based on http://michaelnielsen.org/polymath1/index.php?title=Estimating_a_sum, specifically the subsection "Estimating many sums."
+The following is based on http://michaelnielsen.org/polymath1/index.php?title=Estimating_a_sum, specifically the subsection "Estimating many sums," which also forms the bulk of Section 8. Estimating a Sum, of the July 8, 2018 draft debruijn.pdf. 
 
 Of interest are sums of the form F(N,z,w) = ∑ᴺ n^(-z+w⋅log(n)) where z=z₀+ζ and where ζ and w are O(1). The sum is to be estimated in terms of an exact initial sum, F(N₀,z,w), where N₀<N and a estimated partial sums over intervals of length H+1 thereafter.
 

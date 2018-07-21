@@ -108,7 +108,6 @@ function A(t::Real, x::Real, y::Real)
     s = s⁺(x,y)
     astar = (s+t/2*α(s))
     ans = err = 0.0
-    #terms = Aterms(t,x,y)
     for n in 1:N(t,x)
         term = Aterm(t,n,x,y,s=s,astar=astar)
         ans += term
