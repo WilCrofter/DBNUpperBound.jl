@@ -88,7 +88,7 @@ function region_5(n::Integer; xmax::Integer=2000)
 end
 
 function in_region_5(t::Real, x::Real, y::Real)
-    return (0<t≤1/2) && (x≥200) && (0≤y≤1)
+    return (0≤t≤1/2) && (x≥200) && (0≤y≤1)
 end
 
 function in_region_5(t::Real, z::Number)
