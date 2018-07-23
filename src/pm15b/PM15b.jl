@@ -8,8 +8,10 @@ module PM15b
 
 using DBNUpperBound
 using SpecialFunctions
+using Primes
 
 include("estimating_sums.jl")
+include("eulerprod.jl")
 
 
 end
