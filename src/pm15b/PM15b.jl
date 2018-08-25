@@ -9,6 +9,8 @@ module PM15b
 using DBNUpperBound
 using SpecialFunctions
 using Primes
+using Base.MathConstants
+using QuadGK
 
 include("estimating_sums.jl")
 include("eulerprod.jl")

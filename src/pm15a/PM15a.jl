@@ -8,6 +8,9 @@ module PM15a
 
 using DBNUpperBound
 using SpecialFunctions
+using Base.MathConstants
+using QuadGK
+
 include("utilities.jl")
 include("introduction.jl")
 include("notation.jl")

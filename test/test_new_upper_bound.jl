@@ -1,16 +1,20 @@
 
 using DBNUpperBound
-using Base.Test
+using QuadGK
+using Base.MathConstants
+using SpecialFunctions
+using Test
+using Random
 
 # passes but takes time #
 
 function test_new_upper_bound()
-    info("Testing new upper bound")
+    @info("Testing new upper bound")
     
     setprecision(80)do
         # julia> hash(now())
         # 0xba15e93cb10b7401
-        srand(0xba15e93cb10b7401)
+        Random.seed!(0xba15e93cb10b7401)
 
         r5 = region_5(25)
 

@@ -3,6 +3,7 @@ module DBNUpperBound
 using QuadGK
 using SpecialFunctions
 using Primes
+using Base.MathConstants
 
 include("pm15a/PM15a.jl")
 using .PM15a

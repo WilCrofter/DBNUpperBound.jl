@@ -84,7 +84,7 @@ end
     Definition (51) pp 15
     """
 function C₀(p::Real)
-    return p ≈ 0.5 || p ≈ -0.5 ? (1-im)/4 :(exp(π*im*(p^2/2 + 3/8)) - im*√(2)*cos(π*p/2))/2*cos(π*p)
+    return p ≈ 0.5 || p ≈ -0.5 ? (1-im)/4 : (exp(π*im*(p^2/2 + 3/8)) - im*√(2)*cos(π*p/2))/2*cos(π*p)
 end
 
 """ Aterm(t::Real, n::Int, x::Real, y::Real; s=s⁺(x,y), astar=s+t/2*α(s))

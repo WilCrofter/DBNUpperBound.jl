@@ -84,7 +84,7 @@ end
     Return an nx3 array of n points t,x,y in region 5.
     """
 function region_5(n::Integer; xmax::Integer=2000)
-    return hcat(rand(n)/2, 200+(xmax-200)*rand(n), rand(n))
+    return hcat(rand(n)/2, 200 .+ (xmax-200)*rand(n), rand(n))
 end
 
 function in_region_5(t::Real, x::Real, y::Real)

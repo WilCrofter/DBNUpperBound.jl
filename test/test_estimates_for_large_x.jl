@@ -1,15 +1,21 @@
+
 using DBNUpperBound
-using Base.Test
-if !isdefined(:Href)
+using QuadGK
+using Base.MathConstants
+using SpecialFunctions
+using Test
+using Random
+
+if !isdefined(Main,:Href)
     include("Ht_ref_values.jl") # Htref, a Dictionary of Hₜ reference values provided by Anonymous
 end
 
 function test_estimates_for_large_x()
-    info("Testing estimates for large x")
+    @info("Testing estimates for large x")
     setprecision(80)do
         # julia> UInt(Dates.value(Dates.now()))
         # 0x000039e6618e0dda
-        srand(0x000039e6618e0dda)
+        Random.seed!(0x000039e6618e0dda)
         
         r5 = region_5(100)
         s5 = [s⁺(r5[i,2],r5[i,3]) for i in 1:100]

@@ -8,7 +8,7 @@ using Primes
     """
 function eulerprod(x::Real, primes::Vector{T}=[i for i in 2:n if isprime(i)]) where {T<:Integer}
     tmp = im*x/2-1
-    return abs(prod(1./(1-primes.^tmp)))
+    return abs(prod(1 ./ (1-primes.^tmp)))
 end
 
 """ adhoc(;X::T=6e10, n::I=27, Q::I=10^5, set::Vector{T}=[-0.5,0.0,0.5], threshold::Real=4.0) where {T<:Real, I<:Integer}

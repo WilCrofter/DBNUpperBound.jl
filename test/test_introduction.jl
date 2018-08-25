@@ -1,6 +1,10 @@
 
 using DBNUpperBound
-using Base.Test
+using QuadGK
+using Base.MathConstants
+using SpecialFunctions
+using Test
+using Random
 
 """ 
     Inequality (20) pp 
@@ -39,7 +43,7 @@ function def14(t::Real, x::Real, y::Real)
 end
 
 function test_introduction()
-    info("Testing introduction.jl")
+    @info("Testing introduction.jl")
     setprecision(80)do
 
         x = 300.0
@@ -63,7 +67,7 @@ function test_introduction()
         
         # julia> UInt(Dates.value(Dates.now()))
         # 0x000039e5fab138e8
-        srand(0x000039e5fab138e8) #random seed
+        Random.seed!(0x000039e5fab138e8) #random seed
         r5 = region_5(50)
 
         # test fₜ as defined in (14) pp. 4 against implementation in pm15a/introduction.jl
